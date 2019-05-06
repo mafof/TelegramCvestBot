@@ -35,11 +35,11 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function map()
     {
-        $this->mapApiRoutes();
+        //$this->mapApiRoutes();
 
         $this->mapWebRoutes();
 
-        //
+        $this->mapWebHookRoutes();
     }
 
     /**
@@ -62,6 +62,7 @@ class RouteServiceProvider extends ServiceProvider
      * These routes are typically stateless.
      *
      * @return void
+     * @deprecated
      */
     protected function mapApiRoutes()
     {
@@ -69,5 +70,12 @@ class RouteServiceProvider extends ServiceProvider
              ->middleware('api')
              ->namespace($this->namespace)
              ->group(base_path('routes/api.php'));
+    }
+
+
+    protected function mapWebHookRoutes() {
+        Route::prefix('webhook')
+            ->namespace($this->namespace)
+            ->group(base_path('routes/webhook.php'));
     }
 }
