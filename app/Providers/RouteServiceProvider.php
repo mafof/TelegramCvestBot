@@ -75,6 +75,7 @@ class RouteServiceProvider extends ServiceProvider
 
     protected function mapWebHookRoutes() {
         Route::prefix('')
+            ->name($this->namespace)
             ->group(base_path('routes/webhook.php'));
     }
 }
