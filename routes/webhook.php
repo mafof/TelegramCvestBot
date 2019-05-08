@@ -1,5 +1,3 @@
 <?php
 
-Route::any('/telegram/wh', function(\Illuminate\Http\Request $req) {
-    dd($req);
-});
+Route::any('/telegram/wh', 'App\Http\Controllers\Telegram@onUpdate');
