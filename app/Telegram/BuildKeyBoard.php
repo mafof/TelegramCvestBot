@@ -70,9 +70,10 @@ class BuildKeyBoard {
         return $this;
     }
 
-    public function appendButtonInline($text, $url = null) {
+    public function appendButtonInline($text, $callbackData, $url = null) {
         if($this->keyboard == null) throw new ErrorBuilderKeyBoard("instance keyboard is empty");
         if($this->isRemoveKeyBoard) throw new ErrorBuilderKeyBoard("keyboard is removed");
+        if(is_null($callbackData) && is_null($url)) throw new ErrorBuilderKeyBoard("is not define one params");
         if(isset($this->keyboard->keyboard)) return $this->keyboard;
 
         $countRow = count($this->keyboard->inline_keyboard);
@@ -80,6 +81,8 @@ class BuildKeyBoard {
             $keyButtonInline = new \stdClass();
             $keyButtonInline->text = $text;
             if(!is_null($url)) $keyButtonInline->url = $url;
+            if(!is_null($callbackData)) $keyButtonInline->callback_data = $callbackData;
+
             array_push($this->keyboard->inline_keyboard[$countRow-1], $keyButtonInline);
         }
 
