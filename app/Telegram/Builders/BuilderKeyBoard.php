@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Telegram;
+namespace App\Telegram\Builders;
 use App\Telegram\Errors\ErrorBuilderKeyBoard;
 
-class BuildKeyBoard {
+class BuilderKeyBoard {
     private $keyboard = null;
     private $isRemoveKeyBoard = false;
 

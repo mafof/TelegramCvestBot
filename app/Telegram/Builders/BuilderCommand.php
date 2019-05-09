@@ -3,7 +3,7 @@
  * Класс собирает команду в JSON представление/дескриптор cURL
  */
 
-namespace App\Telegram;
+namespace App\Telegram\Builders;
 use App\Telegram\Errors\ErrorBuilderCommand;
 
 class BuilderCommand {
@@ -15,7 +15,7 @@ class BuilderCommand {
         $this->command = $command;
     }
 
-    public function setKeyboard(BuildKeyBoard $keyBoard) {
+    public function setKeyboard(BuilderKeyBoard $keyBoard) {
         $this->keyBoard = $keyBoard->getKeyboard();
     }
 
