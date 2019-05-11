@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Telegram\Errors;
+namespace App\Bot\Messengers\Telegram\Errors;
 use \Error;
 
 class ErrorCoreTelegram extends Error {}

@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Telegram\Builders;
-use App\Telegram\Errors\ErrorBuilderKeyBoard;
+namespace App\Bot\Messengers\Telegram\Builders;
+
+use App\Bot\Messengers\Telegram\Errors\ErrorBuilderKeyBoard;
 
 class BuilderKeyBoard {
     private $keyboard = null;

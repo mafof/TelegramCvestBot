@@ -3,12 +3,12 @@
  * Главный класс работы с модулем
  */
 
-namespace App\Telegram;
+namespace App\Bot\Messengers\Telegram;
 
 
-use App\Telegram\Builders\BuilderCommand;
-use App\Telegram\Commands\NotFoundHandlerCommands;
-use App\Telegram\Errors\ErrorCoreTelegram;
+use App\Bot\Commands\MainMenuHandlerCommands;
+use App\Bot\Messengers\Telegram\Builders\BuilderCommand;
+use App\Bot\Messengers\Telegram\Errors\ErrorCoreTelegram;
 
 class Telegram {
     private $readyCommand = null;
@@ -50,14 +50,14 @@ class Telegram {
 
         $composer = require(base_path('vendor/autoload.php'));
         $classFinder = new \Gears\ClassFinder($composer);
-        $handlerList = $classFinder->namespace("App\\Telegram\\Commands")->search();
+        $handlerList = $classFinder->namespace("App\\Bot\\Commands")->search();
 
         // Делаем обход классов из выше указанного пространва имен =>
         foreach ($handlerList as $handleName) {
             if($handleName == "NotFoundHandlerCommands") continue;
 
             $handle = new $handleName;
-            $finishObject = $handle->handleCommand($typeMessage, $objectResponse->message);
+            $finishObject = $handle->handleCommand($typeMessage, $objectResponse->message, (new TelegramMessenger));
 
             if($finishObject != false && $finishObject instanceof BuilderCommand) {
                 $this->setCommand($finishObject);
@@ -66,11 +66,7 @@ class Telegram {
         }
 
         // Если неизвестная команда =>
-        if(is_null($this->readyCommand)) {
-            $handle = new NotFoundHandlerCommands();
-            $finishObject = $handle->handleCommand($typeMessage, $objectResponse->message);
-            $this->setCommand($finishObject);
-        }
+        // code...
     }
 
     private function getTypeMessage($objectResponse) {

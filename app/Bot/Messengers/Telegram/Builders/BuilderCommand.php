@@ -3,8 +3,9 @@
  * Класс собирает команду в JSON представление/дескриптор cURL
  */
 
-namespace App\Telegram\Builders;
-use App\Telegram\Errors\ErrorBuilderCommand;
+namespace App\Bot\Messengers\Telegram\Builders;
+
+use App\Bot\Messengers\Telegram\Errors\ErrorBuilderCommand;
 
 class BuilderCommand {
     private $command         = null;

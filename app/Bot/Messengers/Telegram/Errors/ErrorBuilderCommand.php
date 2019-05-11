@@ -3,7 +3,7 @@
  * Класс ошибок связанных с конструктором команд
  */
 
-namespace App\Telegram\Errors;
+namespace App\Bot\Messengers\Telegram\Errors;
 use \Error;
 
 class ErrorBuilderCommand extends Error {}
