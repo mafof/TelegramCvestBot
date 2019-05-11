@@ -7,6 +7,7 @@ namespace App\Telegram;
 
 
 use App\Telegram\Builders\BuilderCommand;
+use App\Telegram\Commands\NotFoundHandlerCommands;
 use App\Telegram\Errors\ErrorCoreTelegram;
 
 class Telegram {
@@ -42,5 +43,43 @@ class Telegram {
         } else {
             throw new ErrorCoreTelegram("type {$this->config->typeSend} is not defined");
         }
+    }
+
+    public function mainHandlerCommand($objectResponse) {
+        $typeMessage = $this->getTypeMessage($objectResponse);
+
+        $composer = require(base_path('vendor/autoload.php'));
+        $classFinder = new \Gears\ClassFinder($composer);
+        $handlerList = $classFinder->namespace("App\\Telegram\\Commands")->search();
+
+        // Делаем обход классов из выше указанного пространва имен =>
+        foreach ($handlerList as $handleName) {
+            if($handleName == "NotFoundHandlerCommands") continue;
+
+            $handle = new $handleName;
+            $finishObject = $handle->handleCommand($typeMessage, $objectResponse->message);
+
+            if($finishObject != false && $finishObject instanceof BuilderCommand) {
+                $this->setCommand($finishObject);
+                break;
+            }
+        }
+
+        // Если неизвестная команда =>
+        if(is_null($this->readyCommand)) {
+            $handle = new NotFoundHandlerCommands();
+            $finishObject = $handle->handleCommand($typeMessage, $objectResponse->message);
+            $this->setCommand($finishObject);
+        }
+    }
+
+    private function getTypeMessage($objectResponse) {
+        if(!isset($objectResponse->message)) throw new ErrorCoreTelegram("Object not valid");
+
+        if(isset($objectResponse->message->text)) return "message";
+        else if(isset($objectResponse->message->sticker)) return "sticker";
+        else if(isset($objectResponse->message->voice)) return "voice";
+        else return false;
+
     }
 }
