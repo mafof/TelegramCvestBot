@@ -4,6 +4,7 @@
 namespace App\Bot\Messengers\Telegram;
 
 
+use App\Bot\Commands\BaseHandlerCommands;
 use App\Bot\Messengers\BaseMessenger;
 use App\Bot\Phrases;
 
@@ -23,9 +24,9 @@ class TelegramMessenger implements BaseMessenger, Phrases {
         $keyboard = new BuilderKeyboard;
         $keyboard->setReplyKeyboard(true)
             ->appendRow()
-            ->appendButtonReply(Phrases::ALL_QUESTS)
+            ->appendButtonReply(BaseHandlerCommands::ALL_QUESTS)
             ->appendRow()
-            ->appendButtonReply(Phrases::GET_STATS);
+            ->appendButtonReply(BaseHandlerCommands::GET_STATS);
         $command->setKeyboard($keyboard);
 
         return $command;
@@ -37,12 +38,12 @@ class TelegramMessenger implements BaseMessenger, Phrases {
         $command = new BuilderCommand;
         $command->setCommand("sendMessage");
         $command->appendArgument("chat_id", $user_id);
-        $command->appendArgument("text", Phrases::MAIN_MENU);
+        $command->appendArgument("text", sprintf(Phrases::STATS, $user_id, 0, 0));
 
         $keyboard = new BuilderKeyboard;
         $keyboard->setReplyKeyboard(true)
             ->appendRow()
-            ->appendButtonReply(Phrases::BACK);
+            ->appendButtonReply(BaseHandlerCommands::BACK);
         $command->setKeyboard($keyboard);
 
         return $command;
