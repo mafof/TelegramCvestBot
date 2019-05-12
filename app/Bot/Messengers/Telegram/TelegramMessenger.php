@@ -5,7 +5,6 @@ namespace App\Bot\Messengers\Telegram;
 
 
 use App\Bot\Messengers\BaseMessenger;
-//use App\Bot\Messengers\Telegram\Builders\{BuilderCommand, BuilderKeyboard};
 use App\Bot\Phrases;
 
 use App\Bot\Messengers\Telegram\Builders\BuilderCommand;
@@ -15,6 +14,7 @@ class TelegramMessenger implements BaseMessenger, Phrases {
 
     public function commandMainMenu($user_id) {
         // Добавить состояние пользователю...
+
         $command = new BuilderCommand;
         $command->setCommand("sendMessage");
         $command->appendArgument("chat_id", $user_id);

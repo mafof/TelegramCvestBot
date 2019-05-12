@@ -6,7 +6,6 @@
 namespace App\Bot\Messengers\Telegram;
 
 
-use App\Bot\Commands\MainMenuHandlerCommands;
 use App\Bot\Messengers\Telegram\Builders\BuilderCommand;
 use App\Bot\Messengers\Telegram\Errors\ErrorCoreTelegram;
 
@@ -38,7 +37,7 @@ class Telegram {
         } else if($this->config->typeSend == 'curl' || $this->config->typeSend == 'cURL'){
 
             // code...
-            return response("1", 200);
+            return response("ok", 200);
 
         } else {
             throw new ErrorCoreTelegram("type {$this->config->typeSend} is not defined");
@@ -57,7 +56,7 @@ class Telegram {
             if($handleName == "NotFoundHandlerCommands") continue;
 
             $handle = new $handleName;
-            $finishObject = $handle->handleCommand($typeMessage, $objectResponse->message, (new TelegramMessenger));
+            $finishObject = $handle->handleCommand($typeMessage, $objectResponse->message->chat->id, $objectResponse->message->text, (new TelegramMessenger));
 
             if($finishObject != false && $finishObject instanceof BuilderCommand) {
                 $this->setCommand($finishObject);

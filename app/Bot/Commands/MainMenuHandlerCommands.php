@@ -8,13 +8,13 @@ use App\Bot\Phrases;
 
 class MainMenuHandlerCommands implements BaseHandlerCommands, Phrases {
 
-    public function handleCommand($type, $message, BaseMessenger $messenger) {
+    public function handleCommand($type, $fromId, $message, BaseMessenger $messenger) {
         if(!$this->isCurrentType($type)) return false;
         $instCommand = false;
 
-        switch($message->text) {
+        switch($message) {
             case Phrases::START_BOT:
-                $instCommand = $messenger->commandMainMenu($message->chat->id);
+                $instCommand = $messenger->commandMainMenu($fromId);
             break;
             case Phrases::GET_STATS:
                 $instCommand = false;
@@ -27,6 +27,9 @@ class MainMenuHandlerCommands implements BaseHandlerCommands, Phrases {
         return $instCommand;
     }
 
+    /**
+     * @deprecated
+     */
     private function isCurrentType($type) {
         return ($type == "message");
     }
