@@ -6,10 +6,10 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class QuestList extends Migration {
+class Quests extends Migration {
 
     public function up() {
-        Schema::create('quest_list', function (Blueprint $table) {
+        Schema::create('quests', function (Blueprint $table) {
             $table->increments('id');
             $table->string('quest_name');
             $table->string('quest_description');
@@ -18,12 +18,12 @@ class QuestList extends Migration {
             $table->boolean('quest_is_confirm');
         });
 
-        Schema::table('quest_list', function (Blueprint $table) {
-            $table->foreign('quest_author')->references('id')->on('user_list');
+        Schema::table('quests', function (Blueprint $table) {
+            $table->foreign('quest_author')->references('id')->on('users');
         });
     }
 
     public function down() {
-        Schema::dropIfExists('quest_list');
+        Schema::dropIfExists('quests');
     }
 }

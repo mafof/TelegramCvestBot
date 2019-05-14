@@ -6,10 +6,10 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class MessengerUser extends Migration {
+class MessengersUsers extends Migration {
 
     public function up() {
-        Schema::create('messenger_user', function (Blueprint $table) {
+        Schema::create('messengers_users', function (Blueprint $table) {
             $table->increments('id');
             $table->string('messenger_identifier');
             $table->integer('quest_done_count');
@@ -19,12 +19,12 @@ class MessengerUser extends Migration {
             $table->string('confirm_code')->nullable();
         });
 
-        Schema::table('messenger_user', function (Blueprint $table) {
-           $table->foreign('user_id')->references('id')->on('user_list');
+        Schema::table('messengers_users', function (Blueprint $table) {
+           $table->foreign('user_id')->references('id')->on('users');
         });
     }
 
     public function down() {
-        Schema::dropIfExists('messenger_user');
+        Schema::dropIfExists('messengers_users');
     }
 }
