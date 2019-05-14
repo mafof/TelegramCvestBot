@@ -5,5 +5,5 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 
 class Privilege extends Model {
-    protected $table = "privileges_list";
+    protected $table = "privileges";
 }

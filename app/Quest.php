@@ -5,5 +5,5 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 
 class Quest extends Model {
-    protected $table = "quest_list";
+    protected $table = "quests";
 }
