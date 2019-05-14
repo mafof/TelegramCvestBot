@@ -68,7 +68,7 @@ class RegisterController extends Controller
             'nickname' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
-            'group' => DB::table('groups')
+            'group_id' => DB::table('groups')
                 ->select('id')
                 ->where('name', 'Пользователь')
                 ->get()[0]->id,
