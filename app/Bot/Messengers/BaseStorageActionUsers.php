@@ -19,7 +19,7 @@ class BaseStorageActionUsers {
     }
 
     public function addUser($nickname) {
-        return $this->mem->add(self::PREFIX."_{$nickname}", Array(
+        return $this->mem->add($this->PREFIX."_{$nickname}", Array(
             "location"        => false,
             "stepQuest"       => false,
             "isAcceptProfile" => false
@@ -27,7 +27,7 @@ class BaseStorageActionUsers {
     }
 
     public function getUser($nickname) {
-        return $this->mem->get(self::PREFIX."_{$nickname}");
+        return $this->mem->get($this->PREFIX."_{$nickname}");
     }
 
     public function setLocationUser($nickname, $location) {
@@ -35,7 +35,7 @@ class BaseStorageActionUsers {
         if($userData == false) return false;
 
         $userData["location"] = $location;
-        return $this->mem->set(self::PREFIX."_{$nickname}", $userData);
+        return $this->mem->set($this->PREFIX."_{$nickname}", $userData);
     }
 
     public function setStepQuestUser($nickname, $step) {
@@ -43,6 +43,6 @@ class BaseStorageActionUsers {
         if($userData == false) return false;
 
         $userData["stepQuest"] = $step;
-        return $this->mem->set(self::PREFIX."_{$nickname}", $userData);
+        return $this->mem->set($this->PREFIX."_{$nickname}", $userData);
     }
 }
