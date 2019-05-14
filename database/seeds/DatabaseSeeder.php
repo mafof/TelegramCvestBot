@@ -11,8 +11,8 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $this->call('PrivilegesList');
-        $this->call('PrivilegeGroup');
-        $this->call('GroupsListUser');
+        $this->call('GroupsSeed');
+        $this->call('PrivilegesSeed');
+        $this->call('GroupsPrivilegesSeed');
     }
 }
