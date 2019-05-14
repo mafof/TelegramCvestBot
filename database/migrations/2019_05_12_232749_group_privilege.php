@@ -6,21 +6,21 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class GroupsPrivileges extends Migration {
+class GroupPrivilege extends Migration {
 
     public function up() {
-        Schema::create('groups_privileges', function (Blueprint $table) {
+        Schema::create('group_privilege', function (Blueprint $table) {
             $table->integer('group_id')->unsigned();
             $table->integer('privilege_id')->unsigned();
         });
 
-        Schema::table('groups_privileges', function (Blueprint $table) {
+        Schema::table('group_privilege', function (Blueprint $table) {
             $table->foreign('group_id')->references('id')->on('groups');
             $table->foreign('privilege_id')->references('id')->on('privileges');
         });
     }
 
     public function down() {
-        Schema::dropIfExists('groups_privileges');
+        Schema::dropIfExists('group_privilege');
     }
 }

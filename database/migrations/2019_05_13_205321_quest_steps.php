@@ -11,9 +11,9 @@ class QuestSteps extends Migration {
     public function up() {
         Schema::create('quest_steps', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('quest_step_number');
-            $table->string('quest_step_describe');
-            $table->string('quest_step_describe_image'); // path or url
+            $table->integer('number');
+            $table->string('describe');
+            $table->string('describe_image'); // path or url
         });
     }
 

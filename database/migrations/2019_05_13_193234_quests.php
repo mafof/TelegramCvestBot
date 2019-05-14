@@ -11,15 +11,15 @@ class Quests extends Migration {
     public function up() {
         Schema::create('quests', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('quest_name');
-            $table->string('quest_description');
-            $table->integer('quest_author')->unsigned();
-            $table->integer('quest_rating');
-            $table->boolean('quest_is_confirm');
+            $table->string('name');
+            $table->string('description');
+            $table->integer('author')->unsigned();
+            $table->integer('rating');
+            $table->boolean('is_confirm');
         });
 
         Schema::table('quests', function (Blueprint $table) {
-            $table->foreign('quest_author')->references('id')->on('users');
+            $table->foreign('author')->references('id')->on('users');
         });
     }
 

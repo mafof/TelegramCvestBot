@@ -15,14 +15,14 @@ class Users extends Migration {
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->integer('group')->unsigned();
+            $table->integer('group_id')->unsigned();
             $table->boolean('is_ban');
             $table->rememberToken();
             $table->timestamps();
         });
 
         Schema::table('users', function(Blueprint $table) {
-            $table->foreign('group')->references('id')->on('groups');
+            $table->foreign('group_id')->references('id')->on('groups');
         });
     }
 

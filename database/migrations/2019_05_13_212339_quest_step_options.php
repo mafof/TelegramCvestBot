@@ -11,7 +11,7 @@ class QuestStepOptions extends Migration {
     public function up() {
         Schema::create('quest_step_options', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('quest_step_option_describe');
+            $table->string('button_text');
         });
     }
 
