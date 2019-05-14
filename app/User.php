@@ -17,7 +17,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'nickname', 'email', 'password', 'group', 'is_ban'
+        'nickname', 'email', 'password', 'group_id', 'is_ban'
     ];
 
     /**
@@ -37,4 +37,8 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function group() {
+        return $this->belongsTo('App\Group');
+    }
 }
