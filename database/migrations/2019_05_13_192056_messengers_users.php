@@ -12,10 +12,10 @@ class MessengersUsers extends Migration {
         Schema::create('messengers_users', function (Blueprint $table) {
             $table->increments('id');
             $table->string('messenger_identifier');
-            $table->integer('quest_done_count');
-            $table->integer('quest_created_count');
-            $table->string('messenger_type');
-            $table->integer('user_id')->unsigned();
+            $table->integer('quest_done_count')->default(0);
+            $table->integer('quest_created_count')->default(0);
+            $table->integer('messenger_type');
+            $table->integer('user_id')->unsigned()->nullable();
             $table->string('confirm_code')->nullable();
         });
 
