@@ -7,6 +7,7 @@ namespace App\Bot\Messengers\Telegram;
 
 
 use App\Bot\Constants\TypesMessages;
+use App\Bot\Constants\TypesMessengers;
 use App\Bot\Messengers\Telegram\Builders\BuilderCommand;
 use App\Bot\Messengers\Telegram\Errors\ErrorCoreTelegram;
 use App\Bot\Messengers\UserMessenger;
@@ -53,8 +54,6 @@ class Telegram {
 
         // Делаем обход классов из выше указанного пространва имен =>
         foreach ($handlerList as $handleName) {
-            if($handleName === "NotFoundHandlerCommands") continue;
-
             $handle = new $handleName;
             $finishObject = $handle->handleCommand($userMessage, (new TelegramMessenger));
 
@@ -73,6 +72,7 @@ class Telegram {
     private function getUserMessengerObject($instResponse) {
         $user = new UserMessenger;
         $user->typeMessage = $this->getTypeMessage($instResponse);
+        $user->typeMessenger = TypesMessengers::TELEGRAM;
 
         if($user->typeMessage === TypesMessages::KEYBOARD_INLINE_MESSAGE) {
 

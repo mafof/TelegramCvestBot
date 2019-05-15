@@ -10,4 +10,5 @@ class UserMessenger {
     public $identifier;
     public $textMessage;
     public $typeMessage;
+    public $typeMessenger;
 }

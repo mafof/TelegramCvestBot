@@ -4,9 +4,6 @@
  */
 namespace App\Bot\Messengers;
 
-
-use App\Bot\Constants\LocationList;
-
 class BaseStorageActionUsers {
     protected $PREFIX = null;
     protected $mem = null;
@@ -18,9 +15,10 @@ class BaseStorageActionUsers {
 
     public function addUser($nickname) {
         return $this->mem->add($this->PREFIX."_{$nickname}", Array(
+            "prevLocation"    => false,
             "location"        => false,
             "stepQuest"       => false,
-            "isAcceptProfile" => false
+            "pageQuests"      => false
         ));
     }
 
@@ -32,7 +30,15 @@ class BaseStorageActionUsers {
         return $this->mem->delete($this->PREFIX."_{$nickname}");
     }
 
-    public function setLocationUser($nickname, LocationList $location) {
+    public function setPrevLocationUser($nickname, int $location) {
+        $userData = $this->getUser($nickname);
+        if($userData == false) return false;
+
+        $userData["prevLocation"] = $location;
+        return $this->mem->set($this->PREFIX."_{$nickname}", $userData);
+    }
+
+    public function setLocationUser($nickname, int $location) {
         $userData = $this->getUser($nickname);
         if($userData == false) return false;
 
@@ -45,6 +51,14 @@ class BaseStorageActionUsers {
         if($userData == false) return false;
 
         $userData["stepQuest"] = $step;
+        return $this->mem->set($this->PREFIX."_{$nickname}", $userData);
+    }
+
+    public function setPageQuestsUser($nickname, int $page) {
+        $userData = $this->getUser($nickname);
+        if($userData == false) return false;
+
+        $userData["pageQuests"] = $page;
         return $this->mem->set($this->PREFIX."_{$nickname}", $userData);
     }
 }

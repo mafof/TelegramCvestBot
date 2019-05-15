@@ -4,6 +4,8 @@
 namespace App\Bot\Messengers\Telegram;
 
 use App\Bot\Constants\CommandsList;
+use App\Bot\Constants\LocationList;
+use App\Bot\Constants\TypesMessengers;
 use App\Bot\Messengers\BaseMessenger;
 use App\Bot\Messengers\Facades\TelegramStorage;
 use App\Bot\Constants\Phrases;
@@ -11,11 +13,13 @@ use App\Bot\Constants\Phrases;
 use App\Bot\Messengers\Telegram\Builders\BuilderCommand;
 use App\Bot\Messengers\Telegram\Builders\BuilderKeyBoard;
 use App\Bot\Messengers\UserMessenger;
+use App\MessengersUser;
 
 class TelegramMessenger implements BaseMessenger {
 
     public function commandMainMenu(UserMessenger $user) {
-        // Добавить состояние пользователю...
+        $this->createUser($user);
+        TelegramStorage::setLocationUser($user->nickName, LocationList::MAIN_MENU);
 
         $command = new BuilderCommand;
         $command->setCommand("sendMessage");
@@ -34,7 +38,7 @@ class TelegramMessenger implements BaseMessenger {
     }
 
     public function commandStats(UserMessenger $user) {
-        // Добавить состояние пользователю...
+        TelegramStorage::setLocationUser($user->nickName, LocationList::STATS);
 
         $command = new BuilderCommand;
         $command->setCommand("sendMessage");
@@ -51,6 +55,20 @@ class TelegramMessenger implements BaseMessenger {
     }
 
     public function commandListQuests(UserMessenger $user) {
+        TelegramStorage::setLocationUser($user->nickName, LocationList::QUESTS);
+
+        $command = new BuilderCommand;
+        $command->setCommand("sendMessage");
+        $command->appendArgument("chat_id", $user->identifier);
+        $command->appendArgument("text", "ЗАГЛУШКА");
+
+        $keyboard = new BuilderKeyboard;
+        $keyboard->setReplyKeyboard(true)
+            ->appendRow()
+            ->appendButtonReply(CommandsList::BACK);
+        $command->setKeyboard($keyboard);
+
+        return $command;
     }
 
     public function commandTopQuests(UserMessenger $user) {
@@ -66,5 +84,30 @@ class TelegramMessenger implements BaseMessenger {
         $command->appendArgument("text", Phrases::NOT_FOUND_COMMAND);
 
         return $command;
+    }
+
+    public function commandBack(UserMessenger $user) {
+    }
+
+    public function commandNewQuests(UserMessenger $user) {
+    }
+
+    /**
+     * Создает пользователя
+     * @param UserMessenger $user
+     */
+    private function createUser(UserMessenger $user) {
+        $dbUser = MessengersUser::getUser($user->nickName);
+        if($dbUser === null) {
+            MessengersUser::create([
+                'messenger_identifier' => $user->nickName,
+                'messenger_type' => TypesMessengers::TELEGRAM
+            ]);
+        }
+
+        $storageUser = TelegramStorage::getUser($user->nickName);
+        if($storageUser === false) {
+            TelegramStorage::addUser($user->nickName);
+        }
     }
 }
