@@ -5,11 +5,9 @@
 namespace App\Bot\Messengers;
 
 
-class BaseStorageActionUsers {
-    const LOCATION_MAIN_MENU = 1;
-    const LOCATION_QUEST = 2;
-    const LOCATION_STATS = 3;
+use App\Bot\Constants\LocationList;
 
+class BaseStorageActionUsers {
     protected $PREFIX = null;
     protected $mem = null;
 
@@ -34,7 +32,7 @@ class BaseStorageActionUsers {
         return $this->mem->delete($this->PREFIX."_{$nickname}");
     }
 
-    public function setLocationUser($nickname, $location) {
+    public function setLocationUser($nickname, LocationList $location) {
         $userData = $this->getUser($nickname);
         if($userData == false) return false;
 
@@ -42,7 +40,7 @@ class BaseStorageActionUsers {
         return $this->mem->set($this->PREFIX."_{$nickname}", $userData);
     }
 
-    public function setStepQuestUser($nickname, $step) {
+    public function setStepQuestUser($nickname, int $step) {
         $userData = $this->getUser($nickname);
         if($userData == false) return false;
 

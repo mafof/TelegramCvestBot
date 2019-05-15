@@ -3,8 +3,8 @@
 
 namespace App\Bot\Commands;
 
+use App\Bot\Constants\CommandsList;
 use App\Bot\Messengers\BaseMessenger;
-use App\Bot\Phrases;
 
 class MainMenuHandlerCommands implements BaseHandlerCommands {
 
@@ -13,13 +13,13 @@ class MainMenuHandlerCommands implements BaseHandlerCommands {
         $instCommand = false;
 
         switch($message) {
-            case self::START_BOT:
+            case CommandsList::START_BOT:
                 $instCommand = $messenger->commandMainMenu($fromId);
             break;
-            case self::GET_STATS:
+            case CommandsList::GET_STATS:
                 $instCommand = $messenger->commandStats($fromId);
             break;
-            case self::ALL_QUESTS:
+            case CommandsList::ALL_QUESTS:
                 $instCommand = false;
             break;
         }

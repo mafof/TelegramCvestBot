@@ -3,15 +3,15 @@
 
 namespace App\Bot\Messengers\Telegram;
 
-
-use App\Bot\Commands\BaseHandlerCommands;
+use App\Bot\Constants\CommandsList;
 use App\Bot\Messengers\BaseMessenger;
-use App\Bot\Phrases;
+use App\Bot\Messengers\Facades\TelegramStorage;
+use App\Bot\Constants\Phrases;
 
 use App\Bot\Messengers\Telegram\Builders\BuilderCommand;
 use App\Bot\Messengers\Telegram\Builders\BuilderKeyBoard;
 
-class TelegramMessenger implements BaseMessenger, Phrases {
+class TelegramMessenger implements BaseMessenger {
 
     public function commandMainMenu($user_id) {
         // Добавить состояние пользователю...
@@ -24,9 +24,9 @@ class TelegramMessenger implements BaseMessenger, Phrases {
         $keyboard = new BuilderKeyboard;
         $keyboard->setReplyKeyboard(true)
             ->appendRow()
-            ->appendButtonReply(BaseHandlerCommands::ALL_QUESTS)
+            ->appendButtonReply(CommandsList::ALL_QUESTS)
             ->appendRow()
-            ->appendButtonReply(BaseHandlerCommands::GET_STATS);
+            ->appendButtonReply(CommandsList::GET_STATS);
         $command->setKeyboard($keyboard);
 
         return $command;
@@ -43,13 +43,13 @@ class TelegramMessenger implements BaseMessenger, Phrases {
         $keyboard = new BuilderKeyboard;
         $keyboard->setReplyKeyboard(true)
             ->appendRow()
-            ->appendButtonReply(BaseHandlerCommands::BACK);
+            ->appendButtonReply(CommandsList::BACK);
         $command->setKeyboard($keyboard);
 
         return $command;
     }
 
-    public function commandListQuests() {
+    public function commandListQuests($user_id) {
     }
 
     public function commandTopQuests() {

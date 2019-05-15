@@ -1,9 +1,9 @@
 <?php
 /**
- * Интерфейс с заготовленными фразами
+ * Заготовленные фразы
  */
 
-namespace App\Bot;
+namespace App\Bot\Constants;
 
 
 interface Phrases {

@@ -9,7 +9,7 @@ interface BaseMessenger {
     public function commandMainMenu($user_id);
     public function commandStats($user_id);
 
-    public function commandListQuests();
+    public function commandListQuests($user_id);
     public function commandTopQuests();
 
     public function commandProcessedQuest();
