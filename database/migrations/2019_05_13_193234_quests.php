@@ -16,6 +16,7 @@ class Quests extends Migration {
             $table->integer('author')->unsigned();
             $table->integer('rating');
             $table->boolean('is_confirm');
+            $table->timestamps();
         });
 
         Schema::table('quests', function (Blueprint $table) {
