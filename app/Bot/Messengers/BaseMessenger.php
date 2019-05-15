@@ -4,13 +4,13 @@
  */
 namespace App\Bot\Messengers;
 
-
 interface BaseMessenger {
-    public function commandMainMenu($user_id);
-    public function commandStats($user_id);
+    public function commandMainMenu(UserMessenger $user);
+    public function commandStats(UserMessenger $user);
+    public function commandNotFound(UserMessenger $user);
 
-    public function commandListQuests($user_id);
-    public function commandTopQuests();
+    public function commandListQuests(UserMessenger $user);
+    public function commandTopQuests(UserMessenger $user);
 
-    public function commandProcessedQuest();
+    public function commandProcessedQuest(UserMessenger $user);
 }

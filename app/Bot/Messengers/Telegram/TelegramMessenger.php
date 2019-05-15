@@ -10,15 +10,16 @@ use App\Bot\Constants\Phrases;
 
 use App\Bot\Messengers\Telegram\Builders\BuilderCommand;
 use App\Bot\Messengers\Telegram\Builders\BuilderKeyBoard;
+use App\Bot\Messengers\UserMessenger;
 
 class TelegramMessenger implements BaseMessenger {
 
-    public function commandMainMenu($user_id) {
+    public function commandMainMenu(UserMessenger $user) {
         // Добавить состояние пользователю...
 
         $command = new BuilderCommand;
         $command->setCommand("sendMessage");
-        $command->appendArgument("chat_id", $user_id);
+        $command->appendArgument("chat_id", $user->identifier);
         $command->appendArgument("text", Phrases::MAIN_MENU);
 
         $keyboard = new BuilderKeyboard;
@@ -32,13 +33,13 @@ class TelegramMessenger implements BaseMessenger {
         return $command;
     }
 
-    public function commandStats($user_id) {
+    public function commandStats(UserMessenger $user) {
         // Добавить состояние пользователю...
 
         $command = new BuilderCommand;
         $command->setCommand("sendMessage");
-        $command->appendArgument("chat_id", $user_id);
-        $command->appendArgument("text", sprintf(Phrases::STATS, $user_id, 0, 0));
+        $command->appendArgument("chat_id", $user->identifier);
+        $command->appendArgument("text", sprintf(Phrases::STATS, "@{$user->nickName}", 0, 0));
 
         $keyboard = new BuilderKeyboard;
         $keyboard->setReplyKeyboard(true)
@@ -49,12 +50,21 @@ class TelegramMessenger implements BaseMessenger {
         return $command;
     }
 
-    public function commandListQuests($user_id) {
+    public function commandListQuests(UserMessenger $user) {
     }
 
-    public function commandTopQuests() {
+    public function commandTopQuests(UserMessenger $user) {
     }
 
-    public function commandProcessedQuest() {
+    public function commandProcessedQuest(UserMessenger $user) {
+    }
+
+    public function commandNotFound(UserMessenger $user) {
+        $command = new BuilderCommand;
+        $command->setCommand("sendMessage");
+        $command->appendArgument("chat_id", $user->identifier);
+        $command->appendArgument("text", Phrases::NOT_FOUND_COMMAND);
+
+        return $command;
     }
 }

@@ -6,8 +6,10 @@
 namespace App\Bot\Messengers\Telegram;
 
 
+use App\Bot\Constants\TypesMessages;
 use App\Bot\Messengers\Telegram\Builders\BuilderCommand;
 use App\Bot\Messengers\Telegram\Errors\ErrorCoreTelegram;
+use App\Bot\Messengers\UserMessenger;
 
 class Telegram {
     private $readyCommand = null;
@@ -44,24 +46,17 @@ class Telegram {
         }
     }
 
-    public function mainHandlerCommand($objectResponse) {
-        $typeMessage = $this->getTypeMessage($objectResponse);
+    public function mainHandlerCommand($instResponse) {
 
-        $composer = require(base_path('vendor/autoload.php'));
-        $classFinder = new \Gears\ClassFinder($composer);
-        $handlerList = $classFinder->namespace("App\\Bot\\Commands")->search();
+        $userMessage = $this->getUserMessengerObject($instResponse);
+        $handlerList = $this->getHandlerClassesName();
 
         // Делаем обход классов из выше указанного пространва имен =>
         foreach ($handlerList as $handleName) {
-            if($handleName == "NotFoundHandlerCommands") continue;
+            if($handleName === "NotFoundHandlerCommands") continue;
 
             $handle = new $handleName;
-            $finishObject = $handle->handleCommand(
-                $typeMessage,
-                $objectResponse->message->chat->id,
-                $objectResponse->message->text,
-                (new TelegramMessenger)
-            );
+            $finishObject = $handle->handleCommand($userMessage, (new TelegramMessenger));
 
             if($finishObject != false && $finishObject instanceof BuilderCommand) {
                 $this->setCommand($finishObject);
@@ -70,16 +65,48 @@ class Telegram {
         }
 
         // Если неизвестная команда =>
-        // code...
+        if($this->readyCommand === null) {
+            $this->setCommand((new TelegramMessenger())->commandNotFound($userMessage));
+        }
     }
 
-    private function getTypeMessage($objectResponse) {
-        if(!isset($objectResponse->message)) throw new ErrorCoreTelegram("Object not valid");
+    private function getUserMessengerObject($instResponse) {
+        $user = new UserMessenger;
+        $user->typeMessage = $this->getTypeMessage($instResponse);
 
-        if(isset($objectResponse->message->text)) return "message";
-        else if(isset($objectResponse->message->sticker)) return "sticker";
-        else if(isset($objectResponse->message->voice)) return "voice";
-        else return false;
+        if($user->typeMessage === TypesMessages::KEYBOARD_INLINE_MESSAGE) {
 
+            $user->nickName = $instResponse->callback_query->message->chat->username;
+            $user->identifier = $instResponse->callback_query->message->chat->id;
+            $user->textMessage = $instResponse->callback_query->message->text;
+        } else if($user->typeMessage === TypesMessages::MESSAGE) {
+
+            $user->nickName = $instResponse->message->chat->username;
+            $user->identifier = $instResponse->message->chat->id;
+            $user->textMessage = $instResponse->message->text;
+        } else {
+            throw new ErrorCoreTelegram("Object is not current type");
+        }
+
+        return $user;
+    }
+
+    private function getTypeMessage($instResponse) {
+        if(isset($instResponse->callback_query))
+            return TypesMessages::KEYBOARD_INLINE_MESSAGE;
+        else if(isset($instResponse->message->text))
+            return TypesMessages::MESSAGE;
+        else if(isset($instResponse->message->sticker))
+            return TypesMessages::STICKER;
+        else if(isset($instResponse->message->voice))
+            return TypesMessages::VOICE;
+        else
+            return false;
+    }
+
+    private function getHandlerClassesName() {
+        $composer = require(base_path('vendor/autoload.php'));
+        $classFinder = new \Gears\ClassFinder($composer);
+        return $classFinder->namespace("App\\Bot\\Commands")->search();
     }
 }
