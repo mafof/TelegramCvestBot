@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Bot\Messengers\Telegram;
 
 use App\Bot\Constants\CommandsList;
@@ -12,6 +11,7 @@ use App\Bot\Constants\Phrases;
 
 use App\Bot\Messengers\Telegram\Builders\BuilderCommand;
 use App\Bot\Messengers\Telegram\Builders\BuilderKeyBoard;
+use App\Bot\Messengers\Telegram\Errors\ErrorCoreTelegram;
 use App\Bot\Messengers\UserMessenger;
 use App\MessengersUser;
 
@@ -87,6 +87,20 @@ class TelegramMessenger implements BaseMessenger {
     }
 
     public function commandBack(UserMessenger $user) {
+        $storage = TelegramStorage::getUser($user->nickName);
+
+        switch ($storage['prevLocation']) {
+            case LocationList::MAIN_MENU:
+                return $this->commandMainMenu($user);
+            break;
+            case LocationList::QUESTS:
+                return $this->commandListQuests($user);
+            break;
+            // code...
+            default:
+                throw new ErrorCoreTelegram("not found value prevLocation ${$storage['prevLocation']}");
+            break;
+        }
     }
 
     public function commandNewQuests(UserMessenger $user) {
@@ -96,7 +110,7 @@ class TelegramMessenger implements BaseMessenger {
      * Создает пользователя
      * @param UserMessenger $user
      */
-    private function createUser(UserMessenger $user) {
+    public function createUser(UserMessenger $user) {
         $dbUser = MessengersUser::getUser($user->nickName);
         if($dbUser === null) {
             MessengersUser::create([

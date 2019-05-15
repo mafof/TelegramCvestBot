@@ -42,6 +42,9 @@ class BaseStorageActionUsers {
         $userData = $this->getUser($nickname);
         if($userData == false) return false;
 
+        if(isset($userData["location"]))
+            $this->setPrevLocationUser($nickname, $userData["location"]);
+
         $userData["location"] = $location;
         return $this->mem->set($this->PREFIX."_{$nickname}", $userData);
     }
