@@ -5,19 +5,20 @@ namespace App\Bot\Commands;
 
 use App\Bot\Constants\CommandsList;
 use App\Bot\Messengers\BaseMessenger;
+use App\Bot\Messengers\UserMessenger;
 
 class MainMenuHandlerCommands implements BaseHandlerCommands {
 
-    public function handleCommand($type, $fromId, $message, BaseMessenger $messenger) {
-        if(!$this->isCurrentType($type)) return false;
+
+    public function handleCommand(UserMessenger $user, BaseMessenger $messenger) {
         $instCommand = false;
 
-        switch($message) {
+        switch($user->textMessage) {
             case CommandsList::START_BOT:
-                $instCommand = $messenger->commandMainMenu($fromId);
+                $instCommand = $messenger->commandMainMenu($user);
             break;
             case CommandsList::GET_STATS:
-                $instCommand = $messenger->commandStats($fromId);
+                $instCommand = $messenger->commandStats($user);
             break;
             case CommandsList::ALL_QUESTS:
                 $instCommand = false;
@@ -25,12 +26,5 @@ class MainMenuHandlerCommands implements BaseHandlerCommands {
         }
 
         return $instCommand;
-    }
-
-    /**
-     * @deprecated
-     */
-    private function isCurrentType($type) {
-        return ($type == "message");
     }
 }

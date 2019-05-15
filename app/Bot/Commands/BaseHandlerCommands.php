@@ -3,15 +3,14 @@
 namespace App\Bot\Commands;
 
 use App\Bot\Messengers\BaseMessenger;
+use App\Bot\Messengers\UserMessenger;
 
 interface BaseHandlerCommands {
     /**
      * Функция обработчик команды
-     * @param $type - тип сообщения
-     * @param $fromId - от кого(уникальный индетификатор пользователя от мессенджера)
-     * @param $message - само сообщение
+     * @param UserMessenger $user - объект хранящий необходимые данные пользователя
      * @param BaseMessenger $messenger - объект мессенджера
      * @return mixed - BuilderCommand класс заполненный командой | false
      */
-    public function handleCommand($type, $fromId, $message, BaseMessenger $messenger);
+    public function handleCommand(UserMessenger $user, BaseMessenger $messenger);
 }
