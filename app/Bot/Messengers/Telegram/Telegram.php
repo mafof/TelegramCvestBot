@@ -56,7 +56,12 @@ class Telegram {
             if($handleName == "NotFoundHandlerCommands") continue;
 
             $handle = new $handleName;
-            $finishObject = $handle->handleCommand($typeMessage, $objectResponse->message->chat->id, $objectResponse->message->text, (new TelegramMessenger));
+            $finishObject = $handle->handleCommand(
+                $typeMessage,
+                $objectResponse->message->chat->id,
+                $objectResponse->message->text,
+                (new TelegramMessenger)
+            );
 
             if($finishObject != false && $finishObject instanceof BuilderCommand) {
                 $this->setCommand($finishObject);

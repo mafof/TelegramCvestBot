@@ -30,6 +30,10 @@ class BaseStorageActionUsers {
         return $this->mem->get($this->PREFIX."_{$nickname}");
     }
 
+    public function removeUser($nickname) {
+        return $this->mem->delete($this->PREFIX."_{$nickname}");
+    }
+
     public function setLocationUser($nickname, $location) {
         $userData = $this->getUser($nickname);
         if($userData == false) return false;
