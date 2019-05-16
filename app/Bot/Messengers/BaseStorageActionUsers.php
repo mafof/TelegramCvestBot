@@ -30,20 +30,12 @@ class BaseStorageActionUsers {
         return $this->mem->delete($this->PREFIX."_{$nickname}");
     }
 
-    public function setPrevLocationUser($nickname, int $location) {
-        $userData = $this->getUser($nickname);
-        if($userData == false) return false;
-
-        $userData["prevLocation"] = $location;
-        return $this->mem->set($this->PREFIX."_{$nickname}", $userData);
-    }
-
     public function setLocationUser($nickname, int $location) {
         $userData = $this->getUser($nickname);
         if($userData == false) return false;
 
         if(isset($userData["location"]))
-            $this->setPrevLocationUser($nickname, $userData["location"]);
+            $userData = $this->setPrevLocationUser($userData, $userData["location"]);
 
         $userData["location"] = $location;
         return $this->mem->set($this->PREFIX."_{$nickname}", $userData);
@@ -63,5 +55,10 @@ class BaseStorageActionUsers {
 
         $userData["pageQuests"] = $page;
         return $this->mem->set($this->PREFIX."_{$nickname}", $userData);
+    }
+
+    private function setPrevLocationUser(Array $userData, int $location) {
+        $userData["prevLocation"] = $location;
+        return $userData;
     }
 }
