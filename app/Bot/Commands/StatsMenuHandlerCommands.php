@@ -15,7 +15,7 @@ class StatsMenuHandlerCommands extends BaseHandlerCommands {
         $storage = app()->make($this->getTypeMessenger($user));
         $instCommand = false;
 
-        $storageUser = $storage->getUser($user->nickName);
+        $storageUser = $storage->getUser($user->nickname);
         if($storageUser === false) return false;
 
         if(!$this->isType($storageUser)) return false;

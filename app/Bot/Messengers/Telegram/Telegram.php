@@ -76,12 +76,13 @@ class Telegram {
 
         if($user->typeMessage === TypesMessages::KEYBOARD_INLINE_MESSAGE) {
 
-            $user->nickName = $instResponse->callback_query->message->chat->username;
+            $user->nickname = $instResponse->callback_query->message->chat->username;
             $user->identifier = $instResponse->callback_query->message->chat->id;
             $user->textMessage = $instResponse->callback_query->message->text;
+            $user->commandText = $instResponse->callback_query->data;
         } else if($user->typeMessage === TypesMessages::MESSAGE) {
 
-            $user->nickName = $instResponse->message->chat->username;
+            $user->nickname = $instResponse->message->chat->username;
             $user->identifier = $instResponse->message->chat->id;
             $user->textMessage = $instResponse->message->text;
         } else {

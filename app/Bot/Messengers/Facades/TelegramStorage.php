@@ -5,16 +5,14 @@ namespace App\Bot\Messengers\Facades;
 
 
 use Illuminate\Support\Facades\Facade;
-use App\Bot\Constants\LocationList;
 
 /**
- * @method static bool addUser(string $nickname)
- * @method static mixed getUser(string $nickname)
- * @method static bool removeUser(string $nickname)
- * @method static bool setPrevLocationUser(string $nickname, int $location)
- * @method static bool setLocationUser(string $nickname, int $location)
- * @method static bool setStepQuestUser(string $nickname, int $step)
- * @method static bool setPageQuestsUser(string $nickname, int $page)
+ * @method static bool addUser(string $identifier)
+ * @method static mixed getUser(string $identifier)
+ * @method static bool removeUser(string $identifier)
+ * @method static bool setLocationUser(string $identifier, int $location)
+ * @method static bool setStepQuestUser(string $identifier, int $step)
+ * @method static bool setPageQuestsUser(string $identifier, int $page)
  *
  * @see \App\Bot\Messengers\Telegram\TelegramStorageActionUsers
  * @see \App\Bot\Messengers\BaseStorageActionUsers

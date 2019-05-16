@@ -12,4 +12,5 @@ interface LocationList {
     const QUEST_DESCRIBE = 5;
     const QUEST = 6;
     const STATS = 7;
+    const QUEST_FINISH = 8;
 }

@@ -19,7 +19,7 @@ class TelegramMessenger implements BaseMessenger {
 
     public function commandMainMenu(UserMessenger $user) {
         $this->createUser($user);
-        TelegramStorage::setLocationUser($user->nickName, LocationList::MAIN_MENU);
+        TelegramStorage::setLocationUser($user->nickname, LocationList::MAIN_MENU);
 
         $command = new BuilderCommand;
         $command->setCommand("sendMessage");
@@ -38,12 +38,12 @@ class TelegramMessenger implements BaseMessenger {
     }
 
     public function commandStats(UserMessenger $user) {
-        TelegramStorage::setLocationUser($user->nickName, LocationList::STATS);
+        TelegramStorage::setLocationUser($user->nickname, LocationList::STATS);
 
         $command = new BuilderCommand;
         $command->setCommand("sendMessage");
         $command->appendArgument("chat_id", $user->identifier);
-        $command->appendArgument("text", sprintf(Phrases::STATS, "@{$user->nickName}", 0, 0));
+        $command->appendArgument("text", sprintf(Phrases::STATS, "@{$user->nickname}", 0, 0));
 
         $keyboard = new BuilderKeyboard;
         $keyboard->setReplyKeyboard(true)
@@ -55,7 +55,7 @@ class TelegramMessenger implements BaseMessenger {
     }
 
     public function commandListQuests(UserMessenger $user) {
-        TelegramStorage::setLocationUser($user->nickName, LocationList::QUESTS);
+        TelegramStorage::setLocationUser($user->nickname, LocationList::QUESTS);
 
         $command = new BuilderCommand;
         $command->setCommand("sendMessage");
@@ -72,6 +72,37 @@ class TelegramMessenger implements BaseMessenger {
     }
 
     public function commandTopQuests(UserMessenger $user) {
+        TelegramStorage::setLocationUser($user->nickname, LocationList::QUESTS);
+
+        $command = new BuilderCommand;
+        $command->setCommand("sendMessage");
+        $command->appendArgument("chat_id", $user->identifier);
+        $command->appendArgument("text", "ЗАГЛУШКА");
+
+        $keyboard = new BuilderKeyboard;
+        $keyboard->setReplyKeyboard(true)
+            ->appendRow()
+            ->appendButtonReply(CommandsList::BACK);
+        $command->setKeyboard($keyboard);
+
+        return $command;
+    }
+
+    public function commandNewQuests(UserMessenger $user) {
+        TelegramStorage::setLocationUser($user->nickname, LocationList::QUESTS);
+
+        $command = new BuilderCommand;
+        $command->setCommand("sendMessage");
+        $command->appendArgument("chat_id", $user->identifier);
+        $command->appendArgument("text", "ЗАГЛУШКА");
+
+        $keyboard = new BuilderKeyboard;
+        $keyboard->setReplyKeyboard(true)
+            ->appendRow()
+            ->appendButtonReply(CommandsList::BACK);
+        $command->setKeyboard($keyboard);
+
+        return $command;
     }
 
     public function commandProcessedQuest(UserMessenger $user) {
@@ -87,7 +118,7 @@ class TelegramMessenger implements BaseMessenger {
     }
 
     public function commandBack(UserMessenger $user) {
-        $storage = TelegramStorage::getUser($user->nickName);
+        $storage = TelegramStorage::getUser($user->nickname);
 
         switch ($storage['prevLocation']) {
             case LocationList::MAIN_MENU:
@@ -96,14 +127,16 @@ class TelegramMessenger implements BaseMessenger {
             case LocationList::QUESTS:
                 return $this->commandListQuests($user);
             break;
-            // code...
+            case LocationList::QUESTS_TOP:
+                return $this->commandTopQuests($user);
+            break;
+            case LocationList::QUESTS_NEW:
+                return $this->commandNewQuests($user);
+            break;
             default:
                 throw new ErrorCoreTelegram("not found value prevLocation ${$storage['prevLocation']}");
             break;
         }
-    }
-
-    public function commandNewQuests(UserMessenger $user) {
     }
 
     /**
@@ -111,17 +144,18 @@ class TelegramMessenger implements BaseMessenger {
      * @param UserMessenger $user
      */
     public function createUser(UserMessenger $user) {
-        $dbUser = MessengersUser::getUser($user->nickName);
+        $dbUser = MessengersUser::getUser($user->identifier);
         if($dbUser === null) {
             MessengersUser::create([
-                'messenger_identifier' => $user->nickName,
+                'messenger_identifier' => $user->identifier,
+                'messenger_nickname' => $user->nickname,
                 'messenger_type' => TypesMessengers::TELEGRAM
             ]);
         }
 
-        $storageUser = TelegramStorage::getUser($user->nickName);
+        $storageUser = TelegramStorage::getUser($user->nickname);
         if($storageUser === false) {
-            TelegramStorage::addUser($user->nickName);
+            TelegramStorage::addUser($user->nickname);
         }
     }
 }

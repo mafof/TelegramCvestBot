@@ -9,7 +9,7 @@ class MessengersUser extends Model {
     public $timestamps = false;
 
     protected $fillable = [
-        'messenger_identifier', 'quest_done_count', 'quest_created_count', 'messenger_type', 'user_id'
+        'messenger_identifier', 'messenger_nickname', 'quest_done_count', 'quest_created_count', 'messenger_type', 'user_id'
     ];
 
     public static function getUser($identifier) {
