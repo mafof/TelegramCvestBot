@@ -11,7 +11,8 @@ class MessengersUsers extends Migration {
     public function up() {
         Schema::create('messengers_users', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('messenger_identifier');
+            $table->string('messenger_identifier')->unique();
+            $table->string('messenger_nickname');
             $table->integer('quest_done_count')->default(0);
             $table->integer('quest_created_count')->default(0);
             $table->integer('messenger_type');
