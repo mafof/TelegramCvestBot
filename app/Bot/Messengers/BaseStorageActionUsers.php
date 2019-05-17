@@ -15,7 +15,7 @@ class BaseStorageActionUsers {
 
     public function addUser($identifier) {
         return $this->mem->add($this->PREFIX."_{$identifier}", Array(
-            "prevLocation"    => false,
+            "prevLocation"    => Array(),
             "location"        => false,
             "stepQuest"       => false,
             "pageQuests"      => false
@@ -30,12 +30,12 @@ class BaseStorageActionUsers {
         return $this->mem->delete($this->PREFIX."_{$identifier}");
     }
 
-    public function setLocationUser($identifier, int $location) {
+    public function setLocationUser($identifier, int $location, bool $isPrev) {
         $userData = $this->getUser($identifier);
         if($userData == false) return false;
 
-        if(isset($userData["location"]))
-            $userData = $this->setPrevLocationUser($userData, $userData["location"]);
+        if($userData["location"] !== false && $isPrev == true)
+            $userData = $this->pushPrevLocationUser($userData, $userData["location"], $identifier);
 
         $userData["location"] = $location;
         return $this->mem->set($this->PREFIX."_{$identifier}", $userData);
@@ -57,8 +57,16 @@ class BaseStorageActionUsers {
         return $this->mem->set($this->PREFIX."_{$identifier}", $userData);
     }
 
-    private function setPrevLocationUser(Array $userData, int $location) {
-        $userData["prevLocation"] = $location;
+    private function pushPrevLocationUser(Array $userData, int $location, $identifier) {
+        array_push($userData["prevLocation"], $location);
+        $this->mem->set($this->PREFIX."_{$identifier}", $userData);
         return $userData;
+    }
+
+    public function popLastPrevLocationUser($identifier) {
+        $storage = $this->getUser($identifier);
+        $location = array_pop($storage["prevLocation"]);
+        $this->mem->set($this->PREFIX."_{$identifier}", $storage);
+        return $location;
     }
 }

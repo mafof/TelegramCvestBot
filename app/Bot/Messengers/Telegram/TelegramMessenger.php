@@ -18,9 +18,9 @@ use Illuminate\Support\Str;
 
 class TelegramMessenger implements BaseMessenger {
 
-    public function commandMainMenu(UserMessenger $user) {
+    public function commandMainMenu(UserMessenger $user, bool $isPrev = true) {
         $this->createUser($user);
-        TelegramStorage::setLocationUser($user->nickname, LocationList::MAIN_MENU);
+        TelegramStorage::setLocationUser($user->nickname, LocationList::MAIN_MENU, $isPrev);
 
         $command = new BuilderCommand;
         $command->setCommand("sendMessage");
@@ -41,8 +41,8 @@ class TelegramMessenger implements BaseMessenger {
         return $command;
     }
 
-    public function commandStats(UserMessenger $user) {
-        TelegramStorage::setLocationUser($user->nickname, LocationList::STATS);
+    public function commandStats(UserMessenger $user, bool $isPrev = true) {
+        TelegramStorage::setLocationUser($user->nickname, LocationList::STATS, $isPrev);
 
         $command = new BuilderCommand;
         $command->setCommand("sendMessage");
@@ -58,8 +58,8 @@ class TelegramMessenger implements BaseMessenger {
         return $command;
     }
 
-    public function commandListQuests(UserMessenger $user) {
-        TelegramStorage::setLocationUser($user->nickname, LocationList::QUESTS);
+    public function commandListQuests(UserMessenger $user, bool $isPrev = true) {
+        TelegramStorage::setLocationUser($user->nickname, LocationList::QUESTS, $isPrev);
 
         $command = new BuilderCommand;
         $command->setCommand("sendMessage");
@@ -79,8 +79,8 @@ class TelegramMessenger implements BaseMessenger {
         return $command;
     }
 
-    public function commandTopQuests(UserMessenger $user) {
-        TelegramStorage::setLocationUser($user->nickname, LocationList::QUESTS_TOP);
+    public function commandTopQuests(UserMessenger $user, bool $isPrev = true) {
+        TelegramStorage::setLocationUser($user->nickname, LocationList::QUESTS_TOP, $isPrev);
 
         $command = new BuilderCommand;
         $command->setCommand("sendMessage");
@@ -96,8 +96,8 @@ class TelegramMessenger implements BaseMessenger {
         return $command;
     }
 
-    public function commandNewQuests(UserMessenger $user) {
-        TelegramStorage::setLocationUser($user->nickname, LocationList::QUESTS_NEW);
+    public function commandNewQuests(UserMessenger $user, bool $isPrev = true) {
+        TelegramStorage::setLocationUser($user->nickname, LocationList::QUESTS_NEW, $isPrev);
 
         $command = new BuilderCommand;
         $command->setCommand("sendMessage");
@@ -125,8 +125,8 @@ class TelegramMessenger implements BaseMessenger {
         return $command;
     }
 
-    public function commandAcceptAccount(UserMessenger $user) {
-        TelegramStorage::setLocationUser($user->nickname, LocationList::ACCEPT_ACCOUNT);
+    public function commandAcceptAccount(UserMessenger $user, bool $isPrev = true) {
+        TelegramStorage::setLocationUser($user->nickname, LocationList::ACCEPT_ACCOUNT, $isPrev);
 
         $command = new BuilderCommand;
         $command->setCommand("sendMessage");
@@ -143,23 +143,22 @@ class TelegramMessenger implements BaseMessenger {
     }
 
     public function commandBack(UserMessenger $user) {
-        $storage = TelegramStorage::getUser($user->nickname);
-
-        switch ($storage['prevLocation']) {
+        $prevLocation = TelegramStorage::popLastPrevLocationUser($user->nickname);
+        switch ($prevLocation) {
             case LocationList::MAIN_MENU:
-                return $this->commandMainMenu($user);
+                return $this->commandMainMenu($user, false);
             break;
             case LocationList::QUESTS:
-                return $this->commandListQuests($user);
+                return $this->commandListQuests($user, false);
             break;
             case LocationList::QUESTS_TOP:
-                return $this->commandTopQuests($user);
+                return $this->commandTopQuests($user, false);
             break;
             case LocationList::QUESTS_NEW:
-                return $this->commandNewQuests($user);
+                return $this->commandNewQuests($user, false);
             break;
             default:
-                throw new ErrorCoreTelegram("not found value prevLocation ${$storage['prevLocation']}");
+                throw new ErrorCoreTelegram("not found value prevLocation ${$prevLocation}");
             break;
         }
     }
