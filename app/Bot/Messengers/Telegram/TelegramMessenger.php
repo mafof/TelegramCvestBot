@@ -52,6 +52,25 @@ class TelegramMessenger implements BaseMessenger {
         $keyboard = new BuilderKeyboard;
         $keyboard->setReplyKeyboard(true)
             ->appendRow()
+            ->appendButtonReply(CommandsList::STATS_TOP_USERS)
+            ->appendRow()
+            ->appendButtonReply(CommandsList::BACK);
+        $command->setKeyboard($keyboard);
+
+        return $command;
+    }
+
+    public function commandTopUsers(UserMessenger $user, bool $isPrev = true) {
+        TelegramStorage::setLocationUser($user->nickname, LocationList::STATS_TOP_USERS, $isPrev);
+
+        $command = new BuilderCommand;
+        $command->setCommand("sendMessage");
+        $command->appendArgument("chat_id", $user->identifier);
+        $command->appendArgument("text", sprintf(Phrases::STATS_TOP_USERS, "1.test\n2.test\n3.test"));
+
+        $keyboard = new BuilderKeyBoard;
+        $keyboard->setReplyKeyboard(true)
+            ->appendRow()
             ->appendButtonReply(CommandsList::BACK);
         $command->setKeyboard($keyboard);
 
@@ -113,8 +132,9 @@ class TelegramMessenger implements BaseMessenger {
         return $command;
     }
 
-    public function commandProcessedQuest(UserMessenger $user) {
-    }
+    public function commandDescriptionQuest(UserMessenger $user, bool $isPrev = true) {}
+
+    public function commandProcessedQuest(UserMessenger $user) {}
 
     public function commandNotFound(UserMessenger $user) {
         $command = new BuilderCommand;
@@ -156,6 +176,12 @@ class TelegramMessenger implements BaseMessenger {
             break;
             case LocationList::QUESTS_NEW:
                 return $this->commandNewQuests($user, false);
+            break;
+            case LocationList::STATS_TOP_USERS:
+                return $this->commandTopUsers($user, false);
+            break;
+            case LocationList::STATS:
+                return $this->commandStats($user, false);
             break;
             default:
                 throw new ErrorCoreTelegram("not found value prevLocation ${$prevLocation}");

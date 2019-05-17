@@ -11,6 +11,7 @@ interface CommandsList {
     const NEW_QUESTS = "Список новых квестов";
     const TOP_QUESTS = "Список топ квестов";
     const GET_STATS = "Статистика";
+    const STATS_TOP_USERS = "Топ игроков";
     const ACCEPT_ACCOUNT = "Подтвердить аккаунт";
     const BACK = "Назад";
 }

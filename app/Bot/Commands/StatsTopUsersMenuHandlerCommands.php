@@ -9,9 +9,9 @@ use App\Bot\Constants\LocationList;
 use App\Bot\Messengers\BaseMessenger;
 use App\Bot\Messengers\UserMessenger;
 
-class StatsMenuHandlerCommands extends BaseHandlerCommands {
+class StatsTopUsersMenuHandlerCommands extends BaseHandlerCommands {
 
-    protected $location = LocationList::STATS;
+    protected $location = LocationList::STATS_TOP_USERS;
 
     public function handleCommand(UserMessenger $user, BaseMessenger $messenger) {
         $storage = app()->make($this->getTypeMessenger($user));
@@ -23,9 +23,6 @@ class StatsMenuHandlerCommands extends BaseHandlerCommands {
         if(!$this->isLocation($storageUser)) return false;
 
         switch($user->textMessage) {
-            case CommandsList::STATS_TOP_USERS:
-                $instCommand = $messenger->commandTopUsers($user);
-            break;
             case CommandsList::BACK:
                 $instCommand = $messenger->commandBack($user);
             break;

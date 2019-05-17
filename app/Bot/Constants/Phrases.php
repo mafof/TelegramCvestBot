@@ -26,5 +26,6 @@ interface Phrases {
 (НИКОМУ НЕ ГОВОРИТЕ ЭТОТ ЕДИНОРАЗОВЫЙ КЛЮЧ, ВКЛЮЧАЯ АДМИНИСТРАЦИИ ПРОЕКТА) 
 ";
     const ALL_QUESTS = "Список квестов.";
+    const STATS_TOP_USERS = "Топ игроков:\n%s";
     const NOT_FOUND_COMMAND = "Неизвестная команда";
 }
