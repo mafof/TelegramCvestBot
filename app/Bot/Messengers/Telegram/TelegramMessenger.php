@@ -158,4 +158,11 @@ class TelegramMessenger implements BaseMessenger {
             TelegramStorage::addUser($user->nickname);
         }
     }
+
+    public function recoverUser(UserMessenger $user) {
+        $dbUser = MessengersUser::getUser($user->identifier);
+        if($dbUser === null) return false;
+
+        return TelegramStorage::addUser($user->nickname);
+    }
 }

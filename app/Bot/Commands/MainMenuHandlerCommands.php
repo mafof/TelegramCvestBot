@@ -20,7 +20,12 @@ class MainMenuHandlerCommands extends BaseHandlerCommands {
             if($user->textMessage === CommandsList::START_BOT) {
                 return $messenger->commandMainMenu($user);
             } else {
-                return $messenger->commandNotFound($user);
+
+                if($messenger->recoverUser($user)) {
+                    return $messenger->commandMainMenu($user);
+                } else {
+                    return $messenger->commandNotFound($user);
+                }
             }
         }
 

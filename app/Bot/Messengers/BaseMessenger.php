@@ -11,6 +11,7 @@ interface BaseMessenger {
     public function commandNotFound(UserMessenger $user);
     public function commandBack(UserMessenger $user);
     public function createUser(UserMessenger $user);
+    public function recoverUser(UserMessenger $user);
     // Команды квестов =>
     public function commandListQuests(UserMessenger $user);
     public function commandTopQuests(UserMessenger $user);
