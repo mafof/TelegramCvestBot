@@ -64,10 +64,14 @@ class TelegramMessenger implements BaseMessenger {
         $command = new BuilderCommand;
         $command->setCommand("sendMessage");
         $command->appendArgument("chat_id", $user->identifier);
-        $command->appendArgument("text", "ЗАГЛУШКА");
+        $command->appendArgument("text", Phrases::ALL_QUESTS);
 
         $keyboard = new BuilderKeyboard;
         $keyboard->setReplyKeyboard(true)
+            ->appendRow()
+            ->appendButtonReply(CommandsList::TOP_QUESTS)
+            ->appendRow()
+            ->appendButtonReply(CommandsList::NEW_QUESTS)
             ->appendRow()
             ->appendButtonReply(CommandsList::BACK);
         $command->setKeyboard($keyboard);
@@ -76,7 +80,7 @@ class TelegramMessenger implements BaseMessenger {
     }
 
     public function commandTopQuests(UserMessenger $user) {
-        TelegramStorage::setLocationUser($user->nickname, LocationList::QUESTS);
+        TelegramStorage::setLocationUser($user->nickname, LocationList::QUESTS_TOP);
 
         $command = new BuilderCommand;
         $command->setCommand("sendMessage");
@@ -93,7 +97,7 @@ class TelegramMessenger implements BaseMessenger {
     }
 
     public function commandNewQuests(UserMessenger $user) {
-        TelegramStorage::setLocationUser($user->nickname, LocationList::QUESTS);
+        TelegramStorage::setLocationUser($user->nickname, LocationList::QUESTS_NEW);
 
         $command = new BuilderCommand;
         $command->setCommand("sendMessage");

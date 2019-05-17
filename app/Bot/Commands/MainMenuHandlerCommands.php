@@ -10,6 +10,8 @@ use App\Bot\Messengers\UserMessenger;
 
 class MainMenuHandlerCommands extends BaseHandlerCommands {
 
+    protected $location = LocationList::MAIN_MENU;
+
     public function handleCommand(UserMessenger $user, BaseMessenger $messenger) {
         $storage = app()->make($this->getTypeMessenger($user));
         $instCommand = false;
@@ -29,7 +31,7 @@ class MainMenuHandlerCommands extends BaseHandlerCommands {
             }
         }
 
-        if(!$this->isType($storageUser)) return false;
+        if(!$this->isLocation($storageUser)) return false;
 
         switch($user->textMessage) {
             case CommandsList::GET_STATS:
@@ -44,9 +46,5 @@ class MainMenuHandlerCommands extends BaseHandlerCommands {
         }
 
         return $instCommand;
-    }
-
-    protected function isType(Array $storageUser) {
-        return ($storageUser['location'] === LocationList::MAIN_MENU);
     }
 }

@@ -9,9 +9,9 @@ use App\Bot\Constants\LocationList;
 use App\Bot\Messengers\BaseMessenger;
 use App\Bot\Messengers\UserMessenger;
 
-class QuestsMenuHandlerCommands extends BaseHandlerCommands {
+class QuestsNewMenuHandlerCommands extends BaseHandlerCommands {
 
-    protected $location = LocationList::QUESTS;
+    protected $location = LocationList::QUESTS_NEW;
 
     public function handleCommand(UserMessenger $user, BaseMessenger $messenger) {
         $storage = app()->make($this->getTypeMessenger($user));
@@ -24,15 +24,9 @@ class QuestsMenuHandlerCommands extends BaseHandlerCommands {
         if(!$this->isLocation($storageUser)) return false;
 
         switch($user->textMessage) {
-            case CommandsList::TOP_QUESTS:
-                $instCommand = $messenger->commandTopQuests($user);
-            break;
-            case CommandsList::NEW_QUESTS:
-                $instCommand = $messenger->commandNewQuests($user);
-            break;
             case CommandsList::BACK:
                 $instCommand = $messenger->commandBack($user);
-            break;
+                break;
         }
 
         return $instCommand;
