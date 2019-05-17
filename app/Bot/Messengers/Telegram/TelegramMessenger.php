@@ -14,6 +14,7 @@ use App\Bot\Messengers\Telegram\Builders\BuilderKeyBoard;
 use App\Bot\Messengers\Telegram\Errors\ErrorCoreTelegram;
 use App\Bot\Messengers\UserMessenger;
 use App\MessengersUser;
+use Illuminate\Support\Str;
 
 class TelegramMessenger implements BaseMessenger {
 
@@ -31,7 +32,10 @@ class TelegramMessenger implements BaseMessenger {
             ->appendRow()
             ->appendButtonReply(CommandsList::ALL_QUESTS)
             ->appendRow()
-            ->appendButtonReply(CommandsList::GET_STATS);
+            ->appendButtonReply(CommandsList::GET_STATS)
+            ->appendRow()
+            ->appendButtonReply(CommandsList::ACCEPT_ACCOUNT);
+
         $command->setKeyboard($keyboard);
 
         return $command;
@@ -113,6 +117,23 @@ class TelegramMessenger implements BaseMessenger {
         $command->setCommand("sendMessage");
         $command->appendArgument("chat_id", $user->identifier);
         $command->appendArgument("text", Phrases::NOT_FOUND_COMMAND);
+
+        return $command;
+    }
+
+    public function commandAcceptAccount(UserMessenger $user) {
+        TelegramStorage::setLocationUser($user->nickname, LocationList::ACCEPT_ACCOUNT);
+
+        $command = new BuilderCommand;
+        $command->setCommand("sendMessage");
+        $command->appendArgument("chat_id", $user->identifier);
+        $command->appendArgument("text", sprintf(Phrases::ACCEPT_ACCOUNT, env('APP_URL'), Str::random(10)));
+
+        $keyboard = new BuilderKeyboard;
+        $keyboard->setReplyKeyboard(true)
+            ->appendRow()
+            ->appendButtonReply(CommandsList::BACK);
+        $command->setKeyboard($keyboard);
 
         return $command;
     }

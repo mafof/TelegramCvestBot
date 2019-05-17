@@ -38,6 +38,9 @@ class MainMenuHandlerCommands extends BaseHandlerCommands {
             case CommandsList::ALL_QUESTS:
                 $instCommand = $messenger->commandListQuests($user);
             break;
+            case CommandsList::ACCEPT_ACCOUNT:
+                $instCommand = $messenger->commandAcceptAccount($user);
+            break;
         }
 
         return $instCommand;

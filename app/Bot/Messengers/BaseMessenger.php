@@ -9,6 +9,7 @@ interface BaseMessenger {
     public function commandMainMenu(UserMessenger $user);
     public function commandStats(UserMessenger $user);
     public function commandNotFound(UserMessenger $user);
+    public function commandAcceptAccount(UserMessenger $user);
     public function commandBack(UserMessenger $user);
     public function createUser(UserMessenger $user);
     public function recoverUser(UserMessenger $user);
