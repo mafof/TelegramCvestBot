@@ -15,7 +15,16 @@ abstract class BaseHandlerCommands {
      */
     abstract public function handleCommand(UserMessenger $user, BaseMessenger $messenger);
 
-    abstract protected function isType(Array $storageUser);
+    protected $location = "";
+
+    /**
+     * Проверяет на правильной ли мы локации
+     * @param array $storageUser
+     * @return boolean
+     */
+    protected function isLocation(Array $storageUser) {
+        return ($storageUser['location'] === $this->location);
+    }
 
     /**
      * @param UserMessenger $user - объект хранящий необходимые данные пользователя
