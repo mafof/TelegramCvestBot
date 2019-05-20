@@ -2,6 +2,7 @@ class QuestStep {
     constructor(id) {
         this.id = id;
         this.questsStepCount = 0;
+        this.answerButtonsCount = 0;
         this.listQuestStep = [];
         this.namespace = 'http://www.w3.org/2000/svg';
 
@@ -85,7 +86,7 @@ class QuestStep {
         let numberAnswerButtons = this.listQuestStep[id].answerButtons.length;
 
         let main = document.createElementNS(this.namespace, 'g');
-        main.setAttribute('id', `answerButton${numberAnswerButtons}`);
+        main.setAttribute('id', `answerButton${this.answerButtonsCount}`);
 
         let button = document.createElementNS(this.namespace, 'rect');
         button.setAttribute('class', 'rect');
@@ -126,13 +127,13 @@ class QuestStep {
         document.getElementById(`questStep${this.listQuestStep[id].id}`).appendChild(main);
 
         this.listQuestStep[id].answerButtons.push({
-            id: numberAnswerButtons,
+            id: this.answerButtonsCount,
             y: y,
             text: textAnswer,
             selected: false
         });
 
-        return true;
+        return this.answerButtonsCount++;
     }
 
     moveQuestStep(id, x, y) {
