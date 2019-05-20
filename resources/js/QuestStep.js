@@ -3,6 +3,7 @@ class QuestStep {
         this.id = id;
         this.questsStepCount = 0;
         this.listQuestStep = [];
+        this.namespace = 'http://www.w3.org/2000/svg';
 
         document.addEventListener('mouseup', () => {
             console.log('mouseup');
@@ -24,22 +25,22 @@ class QuestStep {
     }
 
     createQuestStep(x = 1, y = 1, text = "") {
-        let questStep = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        let questStep = document.createElementNS(this.namespace, 'g');
         questStep.setAttribute('id', `questStep${this.questsStepCount}`);
         questStep.setAttribute('transform', `translate(${x},${y})`);
 
-        let rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        let rect = document.createElementNS(this.namespace, 'rect');
         rect.setAttribute('id', `questStepMain${this.questsStepCount}`);
         rect.setAttribute('class', 'rect');
-        rect.setAttribute('width', '240');
-        rect.setAttribute('height', '70');
+        rect.setAttribute('width', 240);
+        rect.setAttribute('height', 70);
         rect.setAttribute('fill', '#1B1D20');
 
-        let foreignObject = document.createElementNS('http://www.w3.org/2000/svg', 'foreignObject');
-        foreignObject.setAttribute('x', '0');
-        foreignObject.setAttribute('y', '0');
-        foreignObject.setAttribute('width', '235');
-        foreignObject.setAttribute('height', '70');
+        let foreignObject = document.createElementNS(this.namespace, 'foreignObject');
+        foreignObject.setAttribute('x', 0);
+        foreignObject.setAttribute('y', 0);
+        foreignObject.setAttribute('width', 240);
+        foreignObject.setAttribute('height', 70);
 
         let elText = document.createElement('div');
         elText.setAttribute('class', 'text');
@@ -74,15 +75,64 @@ class QuestStep {
             answerButtons: []
         });
 
-        this.questsStepCount++;
         let svg = document.getElementById(this.id);
         svg.appendChild(questStep);
 
-        return questStep;
+        return this.questsStepCount++;
     }
 
     createAnswerToQuestStep(id, textAnswer) {
-        // code...
+        let numberAnswerButtons = this.listQuestStep[id].answerButtons.length;
+
+        let main = document.createElementNS(this.namespace, 'g');
+        main.setAttribute('id', `answerButton${numberAnswerButtons}`);
+
+        let button = document.createElementNS(this.namespace, 'rect');
+        button.setAttribute('class', 'rect');
+        button.setAttribute('width', 240);
+        button.setAttribute('height', 50);
+        button.setAttribute('fill', '#1B1D20');
+        button.setAttribute('x', '0');
+
+        let text = document.createElementNS(this.namespace, 'foreignObject');
+        text.setAttribute('width', 240);
+        text.setAttribute('height', 50);
+        text.setAttribute('x', '0');
+
+        let elText = document.createElement('div');
+        elText.setAttribute('class', 'text');
+        elText.setAttribute('xmlns', 'http://www.w3.org/1999/xhtml');
+        elText.innerText = textAnswer;
+
+        let y = 0;
+        
+        if(numberAnswerButtons === 0) {
+            y = 71;
+        } else if(numberAnswerButtons > 0) {
+            y = 71 + (51*numberAnswerButtons);
+        }
+
+        button.setAttribute('y', y);
+        text.setAttribute('y', y);
+
+        text.appendChild(elText);
+        main.appendChild(button);
+        main.appendChild(text);
+
+        main.addEventListener('mousedown', (el) => {
+            console.log(main.id);
+        });
+
+        document.getElementById(`questStep${this.listQuestStep[id].id}`).appendChild(main);
+
+        this.listQuestStep[id].answerButtons.push({
+            id: numberAnswerButtons,
+            y: y,
+            text: textAnswer,
+            selected: false
+        });
+
+        return true;
     }
 
     moveQuestStep(id, x, y) {
