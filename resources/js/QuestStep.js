@@ -6,25 +6,18 @@ class QuestStep {
         this.listQuestStep = [];
         this.namespace = 'http://www.w3.org/2000/svg';
 
-        document.addEventListener('mouseup', () => {
-            console.log('mouseup');
-            this.listQuestStep.map((el) => el.selected = false);
-        });
+        this._selectedButtonId = null; // ID нажатой кнопки ответа
+        this._mouseover = null; // ID местонахождения курсора
 
-        document.addEventListener('mousemove', (event) => {
-            this.listQuestStep.forEach((el) => {
-                if(el.selected === true) {
-                    this.moveQuestStep(el.id, event.movementX, event.movementY);
-                }
-            })
-        });
-
-        main.addEventListener('mouseleave', () => {
-            console.log('mouseleave');
-            this.listQuestStep.map((el) => el.selected = false);
-        });
+        this.registerMainEvents();
     }
 
+    /**
+     * Создает шаг квеста
+     * @param {number} x координата месторасположения блока
+     * @param {number} y координата месторасположения блока
+     * @param {string} text текст блока
+     */
     createQuestStep(x = 1, y = 1, text = "") {
         let questStep = document.createElementNS(this.namespace, 'g');
         questStep.setAttribute('id', `questStep${this.questsStepCount}`);
@@ -82,6 +75,11 @@ class QuestStep {
         return this.questsStepCount++;
     }
 
+    /**
+     * Создает кнопку ответ для определенного шага квеста
+     * @param {string|number} id INDEX массива с объектом шага квеста
+     * @param {string} textAnswer Текст кнопки
+     */
     createAnswerToQuestStep(id, textAnswer) {
         let numberAnswerButtons = this.listQuestStep[id].answerButtons.length;
 
@@ -122,6 +120,28 @@ class QuestStep {
 
         main.addEventListener('mousedown', (el) => {
             console.log(main.id);
+            this.listQuestStep.forEach((el, index) => {
+                el.answerButtons.map((el) => {
+                    if(`answerButton${el.id}` === main.id) {
+                        if(this._selectedButtonId !== null) {
+                            
+                            if(this.isEqualsParentElements(this._selectedButtonId, main.id)) {
+                                this.clearAllSelectedButtonsAnswerQuestStep();
+                                this._selectedButtonId =`answerButton${el.id}`; 
+                                document.getElementById(this._selectedButtonId).setAttribute('class', 'active-answer-button');
+                                el.selected = true;
+                            } else { // Если не в том же блоке =>
+
+                            }
+                        
+                        } else {
+                            this._selectedButtonId =`answerButton${el.id}`; 
+                            document.getElementById(this._selectedButtonId).setAttribute('class', 'active-answer-button');
+                            el.selected = true;
+                        }
+                    }
+                });
+            });
         });
 
         document.getElementById(`questStep${this.listQuestStep[id].id}`).appendChild(main);
@@ -130,10 +150,15 @@ class QuestStep {
             id: this.answerButtonsCount,
             y: y,
             text: textAnswer,
+            bindQuestStep: null,
             selected: false
         });
 
         return this.answerButtonsCount++;
+    }
+
+    createBindingQuestSteps() {
+        // code...
     }
 
     moveQuestStep(id, x, y) {
@@ -151,5 +176,61 @@ class QuestStep {
 
             element.setAttribute('transform', `translate(${x},${y})`);
         }
+    }
+
+    clearAllSelectedQuestStep() {
+        this.listQuestStep.map((el) => el.selected = false);
+    }
+
+    clearAllSelectedButtonsAnswerQuestStep() {
+        this.listQuestStep.map((el) => {
+            el.answerButtons.map((el) => {
+                document.getElementById(`answerButton${el.id}`).setAttribute('class', '');
+                el.selected = false
+            });
+        });
+        this._selectedButtonId = null;
+    }
+
+    registerMainEvents() {
+        // Для всего документа =>
+
+        document.addEventListener('mouseup', () => {
+            console.log('mouseup');
+            this.clearAllSelectedQuestStep();
+        });
+
+        document.addEventListener('mousemove', (event) => {
+            this.listQuestStep.forEach((el) => {
+                if(el.selected === true) {
+                    this.moveQuestStep(el.id, event.movementX, event.movementY);
+                }
+            })
+        });
+
+        // Внутри элемента конструктора =>
+        let main = document.getElementById(this.id);
+        
+        main.addEventListener('mouseleave', () => {
+            console.log('mouseleave');
+            this.clearAllSelectedQuestStep();
+        });
+
+        main.addEventListener('mousedown', () => {
+            if(this._mouseover === "constructor")
+                this.clearAllSelectedButtonsAnswerQuestStep();
+        });
+
+        main.addEventListener('mouseover', (el) => {
+            this._mouseover = el.target.id;
+        });
+    }
+
+    isEqualsParentElements(selectedId, selectElement) {
+        if(selectedId === null) return false;
+        let selected = document.getElementById(selectedId).parentElement.id;
+        let select = document.getElementById(selectElement).parentElement.id;
+        
+        return selected === select;
     }
 }

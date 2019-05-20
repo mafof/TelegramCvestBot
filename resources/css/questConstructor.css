@@ -22,3 +22,7 @@
     -webkit-user-select: none;
     padding: 0px 5px 0px 5px;
 }
+
+.active-answer-button {
+    stroke: red;
+}

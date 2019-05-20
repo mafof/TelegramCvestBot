@@ -29,9 +29,10 @@
         </div>
         <script src="{{ asset('js/all.js') }}"></script>
         <script>
+            let b = null;
             document.addEventListener('DOMContentLoaded', () => {
                 console.log("loaded...");
-                let b = new QuestStep('constructor');
+                b = new QuestStep('constructor');
                 let d = b.createQuestStep(0,0,'w');
                 let c = b.createQuestStep(100, 100, 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem ut ad, omnis eligendi quam vitae vero blanditiis minus voluptatibus deserunt consectetur molestiae a quia expedita corrupti exercitationem perferendis iste architecto!');
                 b.createAnswerToQuestStep(c, "Кнопка 1");
