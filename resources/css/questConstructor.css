@@ -1,0 +1,24 @@
+.main-constructor {
+    min-height: 700px;
+    background-color: #42464D;
+    padding: 0px;
+}
+
+.constructor {
+    height: 660px;
+    background-color: #3B444B;
+    overflow: auto;
+}
+
+.text {
+    color: #fff;
+    font-family: sans-serif;
+    line-height: 23px;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: normal;
+    height: 100%;
+    overflow: auto;
+    -webkit-user-select: none;
+    padding: 0px 5px 0px 5px;
+}

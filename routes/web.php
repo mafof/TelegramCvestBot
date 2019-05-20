@@ -18,3 +18,21 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+Route::get('/about', 'AboutServiceController@index')->name('about');
+
+Route::get('/quest/create/node', function() {
+    return view('quests.createNode', ["title" => "Конструктор квестов"]);
+});
+
+
+// Testing routes =>
+Route::get('/rm/{user}', function ($user) {
+    $users = app()->make('telegramStorage');
+    dd($users->removeUser($user));
+});
+
+Route::get('/gt/{user}', function ($user) {
+    $users = app()->make('telegramStorage');
+    dd($users->getUser($user));
+});
