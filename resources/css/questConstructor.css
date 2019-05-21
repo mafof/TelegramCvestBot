@@ -26,3 +26,9 @@
 .active-answer-button {
     stroke: red;
 }
+
+.link {
+    fill:none;
+    stroke-width: 2;
+    stroke: #000000;
+}

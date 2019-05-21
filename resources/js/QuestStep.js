@@ -42,12 +42,7 @@ class QuestStep {
         elText.innerText = text;
 
         questStep.addEventListener('click', () => {
-            if(
-                this._selectedButtonId !== null &&
-                document.getElementById(this._selectedButtonId).parentElement.id !== questStep.id
-            ) {
-                console.log(questStep.id);
-            }
+            this.createBindingQuestSteps(questStep);
         });
 
         rect.addEventListener('mousedown', () => {
@@ -140,8 +135,6 @@ class QuestStep {
                                 this._selectedButtonId =`answerButton${el.id}`; 
                                 document.getElementById(this._selectedButtonId).setAttribute('class', 'active-answer-button');
                                 el.selected = true;
-                            } else { // Если не в том же блоке =>
-                                // code...
                             }
                         
                         } else {
@@ -160,15 +153,62 @@ class QuestStep {
             id: this.answerButtonsCount,
             y: y,
             text: textAnswer,
-            bindQuestStep: null,
+            bindQuestStepID: null,
+            pathElement: null,
             selected: false
         });
 
         return this.answerButtonsCount++;
     }
 
-    createBindingQuestSteps() {
-        // code...
+    /**
+     * Создает связь между кнопкой и шагом квеста
+     * @param {object} elToBind Node шага квеста
+     */
+    createBindingQuestSteps(elToBind) {
+        if(typeof elToBind !== "object") return;
+
+        if(this._selectedButtonId !== null) {
+            let selectedButton = document.getElementById(this._selectedButtonId);
+            let elFromBind = selectedButton.parentElement;
+            if(elFromBind.id !== elToBind.id) {
+                let elListQuestStepParent = this.listQuestStep.find((el) => elFromBind.id === `questStep${el.id}`);
+                let coordFrom = {
+                    x: elListQuestStepParent.x,
+                    y: new Number(selectedButton.firstChild.attributes.y.value) + elListQuestStepParent.y
+                }
+
+                let elListQuestStepToBind = this.listQuestStep.find((el) => elToBind.id === `questStep${el.id}`);
+                let coordTo = {
+                    x: elListQuestStepToBind.x,
+                    y: elListQuestStepToBind.y
+                }
+
+                coordFrom.x += 240;
+                coordFrom.y += 25;
+                coordTo.y += 70;
+
+                let path = document.createElementNS(this.namespace, 'path');
+                path.setAttribute('class', 'link');
+                path.setAttribute('buttonAnswer', this._selectedButtonId);
+                path.setAttribute('fromElementQuestStep', elFromBind.id);
+                path.setAttribute('toElementQuestStep', elToBind.id);
+                path.setAttribute('d', `M ${coordFrom.x},${coordFrom.y} C${coordTo.x - 20},${coordFrom.y} ${coordFrom.x + 20},${coordTo.y} ${coordTo.x},${coordTo.y}`);
+
+                this.listQuestStep.map((el) => {
+                    el.answerButtons.map((el) => {
+                        if(this._selectedButtonId === `answerButton${el.id}`) {
+                            el.bindQuestStepID = elToBind.id;
+                            el.pathElement = path
+                        }
+                    });
+                });
+
+                let svg = document.getElementById(this.id);
+                svg.appendChild(path);
+                this.clearAllSelectedButtonsAnswerQuestStep();
+            }    
+        }
     }
 
     moveQuestStep(id, x, y) {
@@ -185,6 +225,33 @@ class QuestStep {
             this.listQuestStep[index].y = y;
 
             element.setAttribute('transform', `translate(${x},${y})`);
+        }
+    }
+
+    /**
+     * Перемещает линии вместе с блоками
+     */
+    moveBindedLine() {
+        let listBinded = document.getElementsByClassName('link'); // Список всех path
+        for(let element of listBinded) {
+
+                let elListQuestStepParent = this.listQuestStep.find((el) => element.getAttribute('fromElementQuestStep') === `questStep${el.id}`);
+                let coordFrom = {
+                    x: elListQuestStepParent.x,
+                    y: new Number(document.getElementById(element.getAttribute('buttonAnswer')).firstChild.attributes.y.value) + elListQuestStepParent.y
+                }
+
+                let elListQuestStepToBind = this.listQuestStep.find((el) => element.getAttribute('toElementQuestStep') === `questStep${el.id}`);
+                let coordTo = {
+                    x: elListQuestStepToBind.x,
+                    y: elListQuestStepToBind.y
+                }
+
+                coordFrom.x += 240;
+                coordFrom.y += 25;
+                coordTo.y += 70;
+
+                element.setAttribute('d', `M ${coordFrom.x},${coordFrom.y} C${coordTo.x - 20},${coordFrom.y} ${coordFrom.x + 20},${coordTo.y} ${coordTo.x},${coordTo.y}`);
         }
     }
 
@@ -213,6 +280,7 @@ class QuestStep {
             this.listQuestStep.forEach((el) => {
                 if(el.selected === true) {
                     this.moveQuestStep(el.id, event.movementX, event.movementY);
+                    this.moveBindedLine(el.id);
                 }
             })
         });
