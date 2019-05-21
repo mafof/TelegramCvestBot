@@ -41,6 +41,15 @@ class QuestStep {
         elText.setAttribute('xmlns', 'http://www.w3.org/1999/xhtml');
         elText.innerText = text;
 
+        questStep.addEventListener('click', () => {
+            if(
+                this._selectedButtonId !== null &&
+                document.getElementById(this._selectedButtonId).parentElement.id !== questStep.id
+            ) {
+                console.log(questStep.id);
+            }
+        });
+
         rect.addEventListener('mousedown', () => {
             console.log(rect.id);
             let index = this.listQuestStep.findIndex((el) => `questStepMain${el.id}` === rect.id)
@@ -123,6 +132,7 @@ class QuestStep {
             this.listQuestStep.forEach((el, index) => {
                 el.answerButtons.map((el) => {
                     if(`answerButton${el.id}` === main.id) {
+                        
                         if(this._selectedButtonId !== null) {
                             
                             if(this.isEqualsParentElements(this._selectedButtonId, main.id)) {
@@ -131,7 +141,7 @@ class QuestStep {
                                 document.getElementById(this._selectedButtonId).setAttribute('class', 'active-answer-button');
                                 el.selected = true;
                             } else { // Если не в том же блоке =>
-
+                                // code...
                             }
                         
                         } else {
@@ -196,7 +206,6 @@ class QuestStep {
         // Для всего документа =>
 
         document.addEventListener('mouseup', () => {
-            console.log('mouseup');
             this.clearAllSelectedQuestStep();
         });
 
