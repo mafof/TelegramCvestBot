@@ -7,6 +7,7 @@ class QuestStep {
         this.namespace = 'http://www.w3.org/2000/svg';
 
         this._selectedButtonId = null; // ID нажатой кнопки ответа
+        this._selectedElementBindQuestStep = null; // Элемент связи
         this._mouseover = null; // ID местонахождения курсора
 
         this.registerMainEvents();
@@ -70,6 +71,7 @@ class QuestStep {
             x: x,
             y: y,
             selected: false,
+            text: text,
             answerButtons: []
         });
 
@@ -195,6 +197,12 @@ class QuestStep {
                 path.setAttribute('toElementQuestStep', elToBind.id);
                 path.setAttribute('d', `M ${coordFrom.x},${coordFrom.y} C${coordTo.x - 20},${coordFrom.y} ${coordFrom.x + 20},${coordTo.y} ${coordTo.x},${coordTo.y}`);
 
+                path.addEventListener('click', () => {
+                    this.clearAllSelectedBindQuestStep();
+                    path.setAttribute('class', 'link link-active');
+                    this._selectedElementBindQuestStep = path;
+                });
+
                 this.listQuestStep.map((el) => {
                     el.answerButtons.map((el) => {
                         if(this._selectedButtonId === `answerButton${el.id}`) {
@@ -269,6 +277,15 @@ class QuestStep {
         this._selectedButtonId = null;
     }
 
+    clearAllSelectedBindQuestStep() {
+        let listBindings = document.getElementsByClassName('link');
+        
+        for(let element of listBindings) {
+            element.setAttribute('class', 'link');
+        }
+        this._selectedElementBindQuestStep = null;
+    }
+
     registerMainEvents() {
         // Для всего документа =>
 
@@ -285,6 +302,27 @@ class QuestStep {
             })
         });
 
+        document.body.addEventListener('keydown', (ev) => {
+            if(ev.code === "Backspace") {
+                if(this._selectedElementBindQuestStep !== null) {
+                    let buttonAnswerElementID = this._selectedElementBindQuestStep.getAttribute('buttonAnswer');
+
+                    this.listQuestStep.map(el => {
+                        el.answerButtons.map(el => {
+                            if(`answerButton${el.id}` === buttonAnswerElementID) {
+                                el.bindQuestStepID = null;
+                                el.pathElement = null;
+                            }
+                        });
+                    });
+
+                    let svg = document.getElementById(this.id);
+                    svg.removeChild(this._selectedElementBindQuestStep);
+                    this.clearAllSelectedBindQuestStep();
+                }
+            }
+        });
+
         // Внутри элемента конструктора =>
         let main = document.getElementById(this.id);
         
@@ -294,8 +332,10 @@ class QuestStep {
         });
 
         main.addEventListener('mousedown', () => {
-            if(this._mouseover === "constructor")
+            if(this._mouseover === "constructor") {
                 this.clearAllSelectedButtonsAnswerQuestStep();
+                this.clearAllSelectedBindQuestStep();
+            }
         });
 
         main.addEventListener('mouseover', (el) => {
