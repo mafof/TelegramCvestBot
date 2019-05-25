@@ -17,12 +17,18 @@ class QuestStep {
      * Создает шаг квеста
      * @param {number} x координата месторасположения блока
      * @param {number} y координата месторасположения блока
+     * @param {string} id ID главного блока
      * @param {string} text текст блока
      */
-    createQuestStep(x = 1, y = 1, text = "") {
+    createQuestStep(x = 1, y = 1, text = "", id = null) {
         let questStep = document.createElementNS(this.namespace, 'g');
-        questStep.setAttribute('id', `questStep${this.questsStepCount}`);
         questStep.setAttribute('transform', `translate(${x},${y})`);
+        
+        if(id === null) {
+            questStep.setAttribute('id', `questStep${this.questsStepCount}`);
+        } else {
+            questStep.setAttribute('id', id);
+        }
 
         let rect = document.createElementNS(this.namespace, 'rect');
         rect.setAttribute('id', `questStepMain${this.questsStepCount}`);
@@ -165,7 +171,7 @@ class QuestStep {
 
     /**
      * Создает связь между кнопкой и шагом квеста
-     * @param {object} elToBind Node шага квеста
+     * @param {object} elToBind Node шага квеста к которому надо связать выбранный блок
      */
     createBindingQuestSteps(elToBind) {
         if(typeof elToBind !== "object") return;
@@ -217,6 +223,65 @@ class QuestStep {
                 this.clearAllSelectedButtonsAnswerQuestStep();
             }    
         }
+    }
+
+    /**
+     * Преобразовывает Object с данными в JSON строку
+     * @returns {JSON} JSON строка с данными для БД
+     */
+    exportToJsonData() {
+        let data = [];
+
+        for(let questStep of this.listQuestStep) {
+            data.push({
+                id: `questStep${questStep.id}`,
+                text: questStep.text,
+                x: questStep.x,
+                y: questStep.y,
+                answerButtons: []
+            });
+            
+            for(let answerButton of questStep.answerButtons) {
+                data[data.length-1].answerButtons.push({
+                    bindQuestStepID: answerButton.bindQuestStepID || null,
+                    text: answerButton.text
+                });
+            }
+        }
+        
+        return JSON.stringify(data);
+    }
+
+    /**
+     * Создает блоки и связи между ними из массива данных
+     * @param {string} json json строка данных
+     * @returns {boolean} был ли произведен импорт
+     */
+    importJsonString(json) {
+        if(json === undefined || typeof json !== 'string') return false;
+
+        let data = JSON.parse(json),
+            linked = {};
+
+        // Создаем блоки и подблоки в них =>
+        for(let questStep of data) {
+            let elQuestStep = this.createQuestStep(questStep.x, questStep.y, questStep.text, questStep.id);
+            
+            for(let answerButton of questStep.answerButtons) {
+                let buttonNumberid = this.createAnswerToQuestStep(elQuestStep, answerButton.text);
+                
+                if(answerButton.bindQuestStepID !== null)
+                    linked[`answerButton${buttonNumberid}`] = answerButton.bindQuestStepID;
+            }
+        }
+
+        // Создаем связи между блоками =>
+        for(let index in linked) {
+            this._selectedButtonId = index;
+            this.createBindingQuestSteps(document.getElementById(linked[index]));
+        }
+        
+        return true;
     }
 
     moveQuestStep(id, x, y) {
