@@ -12,6 +12,11 @@ class QuestStepOptions extends Migration {
         Schema::create('quest_step_options', function (Blueprint $table) {
             $table->increments('id');
             $table->string('button_text');
+            $table->integer('quest_step_id')->unsigned();
+        });
+
+        Schema::table('quest_step_options', function (Blueprint $table) {
+            $table->foreign('quest_step_id')->references('id')->on('quest_steps');
         });
     }
 

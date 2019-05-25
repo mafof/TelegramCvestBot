@@ -16,6 +16,8 @@ class Quests extends Migration {
             $table->integer('author')->unsigned();
             $table->integer('rating');
             $table->boolean('is_confirm');
+            $table->integer('x');
+            $table->integer('y');
             $table->timestamps();
         });
 
