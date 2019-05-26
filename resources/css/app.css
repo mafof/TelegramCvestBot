@@ -5,41 +5,86 @@
 
 body {
     background-color: #2D3238!important;
+    margin: 0px;
+    padding: 0px;
 }
 
-.icons {
-    padding-right: 5px;
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    justify-items: center;
+    align-items: center;
+    margin-top: 30px;
 }
 
-.nav-link {
-    font-family: sans-serif;
-    font-style: normal;
-    font-weight: bold;
-    color: #BDBEBF;
-    font-size: 17px;
-    line-height: 23px;
+.card {
+    padding: 30px;
+    background-color: #42464D;
 }
 
-.user {
-    font-size: 13px!important;
+.form-group {
+    display: flex;
+    align-items: center;
+    padding-top: 10px;
 }
 
-.custom-dropdown {
-    background-color: transparent;
-    border: none;
-    padding-top: 0px;
+.form-group input {
+    width: 350px;
+    height: 25px;
+    padding-left: 30px;
+    border: 1px solid transparent;
+    border-radius: 50px;
 }
 
-.custom-dropdown-item {
+.form-group input:focus {
+    outline: none;
+}
+
+.form-group i {
+    position: absolute;
+    padding-left: 10px;
+}
+
+.form-group .checkbox {
+    width: 15px;
+    height: 15px;
+    border: 1px solid transparent;
+    border-radius: 50%;
+}
+
+.form-group label {
     color: #fff;
-    margin-top: 5px;
-    background-color: #212428;
 }
 
-.constructor {
-    padding: 0px!important;
+.invalid-feedback {
+    padding-top: 10px;
+    padding-bottom: 2px;
+    color: red;
+    display: block;
 }
 
-.main-constructor {
-    padding: 0px!important;
+.btn {
+    border: 1px solid transparent;
+    border-radius: 10px;
+    height: 25px;
+}
+
+.btn-primary {
+    background-color: #37B3EF;
+    color: white;
+    margin-top: 10px;
+}
+
+.btn-link {
+    color: #fff;
+    text-decoration: none;
+}
+
+
+@media all and (max-width: 450px) {
+    .form-group input {
+        max-width: 290px;
+    }
+
 }

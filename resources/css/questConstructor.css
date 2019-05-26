@@ -1,13 +1,20 @@
 .main-constructor {
-    min-height: 700px;
     background-color: #42464D;
-    padding: 0px;
+}
+.container {
+    display: block;
+    margin: 0 auto;
+    padding: 5px;
+    max-width: 1200px;
 }
 
 .constructor {
     height: 660px;
+    overflow: scroll;
+}
+
+#constructor {
     background-color: #3B444B;
-    overflow: auto;
 }
 
 .text {
@@ -35,4 +42,34 @@
 
 .link-active {
     stroke: orange!important;
+}
+
+.buttons {
+    width: inherit;
+    height: 50px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.btn {
+    height: 20px;
+    background-color: green;
+    color: #fff;
+    padding-left: 5px;
+    padding-right: 5px;
+    user-select: none;
+}
+
+@media all and (max-width: 768px) {
+    .constructor {
+        height: 550px;
+    }
+}
+
+@media all and (max-width: 480px) {
+    .buttons {
+        flex-direction: column;
+    }
 }
