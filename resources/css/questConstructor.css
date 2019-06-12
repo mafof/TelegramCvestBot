@@ -62,6 +62,42 @@
     user-select: none;
 }
 
+.btn-quest {
+    border-radius: 0;
+}
+
+.btn-green {
+    background-color: #00A86B!important;
+}
+
+/* Popup menu */
+.container-node {
+    display: flex;
+    justify-content: center;
+}
+
+.node {
+    position: absolute;
+    padding: 5px;
+    background-color: #2D3238;
+}
+
+.node span {
+    color: #fff;
+}
+
+.form-group {
+    padding: 10px 0px 10px 0px!important;
+}
+
+.cursor {
+    cursor: pointer;
+}
+
+.span-close-window {
+    float: right;
+}
+
 @media all and (max-width: 768px) {
     .constructor {
         height: 550px;

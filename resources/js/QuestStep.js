@@ -54,7 +54,7 @@ class QuestStep {
 
         rect.addEventListener('mousedown', () => {
             console.log(rect.id);
-            let index = this.listQuestStep.findIndex((el) => `questStepMain${el.id}` === rect.id)
+            let index = this.listQuestStep.findIndex((el) => `questStepMain${el.id}` === rect.id);
             if(index !== -1) {
                 this.listQuestStep[index].selected = true;
             }
@@ -62,7 +62,7 @@ class QuestStep {
 
         foreignObject.addEventListener('mousedown', () => {
             console.log(rect.id);
-            let index = this.listQuestStep.findIndex((el) => `questStepMain${el.id}` === rect.id)
+            let index = this.listQuestStep.findIndex((el) => `questStepMain${el.id}` === rect.id);
             if(index !== -1) {
                 this.listQuestStep[index].selected = true;
             }
