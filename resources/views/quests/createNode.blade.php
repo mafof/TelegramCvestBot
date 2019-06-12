@@ -10,10 +10,13 @@
                     <i class="fas fa-file-signature"></i>
                     <input type="text" id="nameQuestStep">
                 </div>
-                <span>Вариант ответа</span>
-                <div class="form-group">
-                    <i class="fas fa-arrow-circle-right"></i>
-                    <input type="text" class="answer-step-input">
+                <div class="group">
+                    <span>Вариант ответа</span>
+                    <span class="span-close-window" onclick="removeAnswer(this)"><i class="far fa-times-circle"></i></span>
+                    <div class="form-group">
+                        <i class="fas fa-arrow-circle-right"></i>
+                        <input type="text" class="answer-step-input">
+                    </div>
                 </div>
                 <span class="cursor">Добавить вариант ответа</span>
                 <span class="span-close-window cursor">Добавить</span>
@@ -26,7 +29,7 @@
             </div>
             <div class="buttons">
                 <span onclick="showAddNode()" class="btn btn-green btn-quest">Добавить ноду</span>
-                <span class="btn btn-green btn-quest">Редактировать ноду</span>
+                <span onclick="showEditNode()" class="btn btn-green btn-quest">Редактировать ноду</span>
                 <span class="btn btn-green btn-quest">Удалить ноду</span>
                 <span class="btn btn-green btn-quest">Опубликовать</span>
             </div>

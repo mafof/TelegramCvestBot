@@ -18,10 +18,23 @@ function showAddNode() {
     menu.appendChild(spanDescribeStep);
     menu.appendChild(getForm('fas fa-file-signature', 'nameQuestStep', 'id'));
 
+    let group = document.createElement('div');
+    group.className = "group";
+
     let spanVarAnswer = document.createElement('span');
     spanVarAnswer.innerText = "Вариант ответа";
-    menu.appendChild(spanVarAnswer);
-    menu.appendChild(getForm('fas fa-arrow-circle-right', 'answer-step-input', 'class'));
+
+    let spanCloseAnswer = document.createElement('span');
+    spanCloseAnswer.className = "span-close-window";
+    spanCloseAnswer.onclick = removeAnswer.bind(this, spanCloseAnswer);
+    icon = document.createElement('i');
+    icon.className = "far fa-times-circle";
+    spanCloseAnswer.appendChild(icon);
+
+    group.appendChild(spanCloseAnswer);
+    group.appendChild(spanVarAnswer);
+    group.appendChild(getForm('fas fa-arrow-circle-right', 'answer-step-input', 'class'));
+    menu.appendChild(group);
 
     let spanAddAnswerQuestStep = document.createElement('span');
     spanAddAnswerQuestStep.innerText = "Добавить вариант ответа";
@@ -64,8 +77,25 @@ function closeWindowNode() {
     document.getElementById('node-popup').remove();
 }
 
+/**
+ * @deprecated
+ */
 function addAnswerToNode() {
     if(document.getElementById('node-popup') === null) return;
+    let group = document.createElement('div');
+    group.className = "group";
+
+    let spanVarAnswer = document.createElement('span');
+    spanVarAnswer.innerText = "Вариант ответа";
+
+    let spanCloseAnswer = document.createElement('span');
+    spanCloseAnswer.className = "span-close-window";
+    spanCloseAnswer.onclick = removeAnswer.bind(this, spanCloseAnswer);
+    icon = document.createElement('i');
+    icon.className = "far fa-times-circle";
+    spanCloseAnswer.appendChild(icon);
+
+    // Создание input поля =>
     let formGroup = document.createElement('div');
     formGroup.className = "form-group";
 
@@ -78,17 +108,19 @@ function addAnswerToNode() {
     input.className = "answer-step-input";
     formGroup.appendChild(input);
 
-    let spanVarAnswer = document.createElement('span');
-    spanVarAnswer.innerText = "Вариант ответа";
+    group.appendChild(spanCloseAnswer);
+    group.appendChild(spanVarAnswer);
+    group.appendChild(formGroup);
 
     let node = document.getElementById("node-popup");
-    node.insertBefore(spanVarAnswer, node.children[node.children.length - 2]);
-    node.insertBefore(formGroup, node.children[node.children.length - 2]);
+    node.insertBefore(group, node.children[node.children.length - 2]);
+
 }
 
 function addQuestStep() {
     let menuNode = document.getElementById('node-popup');
     let questStep = null;
+    console.dir(menuNode);
 
     for(let el of menuNode.children) {
         if(el.className === "form-group") {
@@ -97,7 +129,13 @@ function addQuestStep() {
             } else {
                 questConstructor.createAnswerToQuestStep(questStep, el.children[1].value);
             }
+        } else if(el.className === "group") {
+            questConstructor.createAnswerToQuestStep(questStep, el.children[2].children[1].value);
         }
     }
     menuNode.remove();
+}
+
+function removeAnswer(element) {
+    element.parentNode.remove();
 }

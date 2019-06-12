@@ -8,6 +8,7 @@ class QuestStep {
 
         this._selectedButtonId = null; // ID нажатой кнопки ответа
         this._selectedElementBindQuestStep = null; // Элемент связи
+        this._selectedQuestStep = null; // ID выбранной Node квеста
         this._mouseover = null; // ID местонахождения курсора
 
         this.registerMainEvents();
@@ -66,6 +67,18 @@ class QuestStep {
             if(index !== -1) {
                 this.listQuestStep[index].selected = true;
             }
+        });
+
+        rect.addEventListener('dblclick', () => {
+            if(this._selectedQuestStep !== null) return;
+            this._selectedQuestStep = rect.id;
+            rect.style.setProperty("stroke", "red");
+        });
+
+        foreignObject.addEventListener('dblclick', () => {
+            if(this._selectedQuestStep !== null) return;
+            this._selectedQuestStep = rect.id;
+            rect.style.setProperty("stroke", "red");
         });
 
         foreignObject.appendChild(elText);
@@ -351,6 +364,12 @@ class QuestStep {
         this._selectedElementBindQuestStep = null;
     }
 
+    clearQuestStep() {
+        if(this._selectedQuestStep === null) return;
+        document.getElementById(this._selectedQuestStep).style.setProperty('stroke', 'none');
+        this._selectedQuestStep = null;
+    }
+
     registerMainEvents() {
         // Для всего документа =>
 
@@ -400,6 +419,7 @@ class QuestStep {
             if(this._mouseover === "constructor") {
                 this.clearAllSelectedButtonsAnswerQuestStep();
                 this.clearAllSelectedBindQuestStep();
+                this.clearQuestStep();
             }
         });
 
