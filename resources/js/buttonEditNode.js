@@ -1,118 +1,65 @@
-function showEditNode() {
-    if(document.getElementById('node-popup') !== null) return;
-    if(questConstructor._selectedQuestStep === null) return;
-
-    let index = questConstructor._selectedQuestStep.match(/([0-9]){1,100}/gm)[0];
-    let stepQuestObj = questConstructor.listQuestStep[index];
-
+function showPopupEditNode() {
+    if(document.getElementById('node-popup') !== null || questConstructor.dbclickQuestStep === null) return;
     let container = document.getElementsByClassName('container-node')[0];
-    let menu = document.createElement('div');
-    menu.className = "node create-node";
-    menu.id = "node-popup";
-
-    let spanCloseWindow = document.createElement('span');
-    spanCloseWindow.className = "span-close-window";
-    spanCloseWindow.onclick = closeWindowNode.bind(this);
-    let icon = document.createElement('i');
-    icon.className = "far fa-times-circle";
-    spanCloseWindow.appendChild(icon);
-    menu.appendChild(spanCloseWindow);
-
-    // Добавление описание шага =>
-    let spanDescribeStep = document.createElement('span');
-    spanDescribeStep.innerText = "Описание шага";
-    menu.appendChild(spanDescribeStep);
-    menu.appendChild(getForm('fas fa-file-signature', 'nameQuestStep', 'id', stepQuestObj.text));
-
-    // Добавление шагов =>
-    stepQuestObj.answerButtons.forEach((el) => {
-        let group = document.createElement('div');
-        group.className = "group";
-
-        let spanVarAnswer = document.createElement('span');
-        spanVarAnswer.innerText = "Вариант ответа";
-
-        let spanCloseAnswer = document.createElement('span');
-        spanCloseAnswer.className = "span-close-window";
-        spanCloseAnswer.onclick = removeAnswer.bind(this, spanCloseAnswer);
-        let iconCloseAnswer = document.createElement('i');
-        iconCloseAnswer.className = "far fa-times-circle";
-        spanCloseAnswer.appendChild(iconCloseAnswer);
-
-        group.appendChild(spanCloseAnswer);
-        group.appendChild(spanVarAnswer);
-        group.appendChild(getForm('fas fa-arrow-circle-right', 'answer-step-input', 'class', el.text));
-        menu.appendChild(group);
-    });
-
-    let spanAddAnswerQuestStep = document.createElement('span');
-    spanAddAnswerQuestStep.innerText = "Добавить вариант ответа";
-    spanAddAnswerQuestStep.onclick = addAnswerToNode;
-    spanAddAnswerQuestStep.className = "cursor";
-    menu.appendChild(spanAddAnswerQuestStep);
-
-    let spanAppendQuestStep = document.createElement('span');
-    spanAppendQuestStep.innerText = "Сохранить";
-    spanAppendQuestStep.className = "span-close-window cursor";
-    spanAppendQuestStep.onclick = saveQuestStep.bind(this, index);
-    menu.appendChild(spanAppendQuestStep);
-
+    let selectedQuestStepDescription = document.getElementById(`questStepShellMain${questConstructor.dbclickQuestStep}`).lastChild.lastChild.innerText;
+    let menu = getGeneralPopupMenu(selectedQuestStepDescription, 'update');
     container.appendChild(menu);
-
-    function getForm(icon, name, typeNamed, text = null) {
-        let formGroup = document.createElement('div');
-        formGroup.className = "form-group";
-
-        let iconEl = document.createElement('i');
-        iconEl.className = icon;
-        formGroup.appendChild(iconEl);
-
-        let input = document.createElement('input');
-        input.type = "text";
-        input.value = (text !== null) ? text : "";
-        if(typeNamed === 'id')
-            input.id = name;
-        else if(typeNamed === 'class')
-            input.className = name;
-        else
-            throw new Error("invalid argument");
-
-        formGroup.appendChild(input);
-
-        return formGroup;
+    for(let el of document.querySelectorAll(`#questStep${questConstructor.dbclickQuestStep} .answerButton`)) {
+        addAnswerToNode(el.lastChild.lastChild.innerText, el.id);
     }
 }
 
-function saveQuestStep(index) {
-    console.dir(index);
-    let menuNode = document.getElementById('node-popup');
-    console.dir(menuNode);
+function updateQuestStep() {
+    if(document.getElementById('node-popup') === null) return;
+    let questStepEl = document.getElementById(`questStepShellMain${questConstructor.dbclickQuestStep}`);
+    let describeText = document.getElementById('describe').lastChild.lastChild.value;
 
-    // Заполняем обновленные данные =>
-    let descriptionText,
-        arrayAnswerText = [];
+    // Устаанвливаем description =>
+    questStepEl.lastChild.lastChild.innerText = describeText;
 
-    for(let el of menuNode.children) {
-        if(el.className === 'form-group') {
-            descriptionText = el.children[1].value;
-        } else if(el.className === 'group') {
-            arrayAnswerText.push(el.children[2].children[1].value);
+    // Удаляет связи и Node ответы =>
+    arrayIdAnswerRemove.forEach(el => {
+        document.getElementById(`answerButton${el}`).remove(); // Удаляем Node ответа
+        // Удалим все path link =>
+        for(let bind of document.querySelectorAll(`.link[answerButton=answerButton${el}]`)) {
+            bind.remove();
+        }
+    });
+    arrayIdAnswerRemove = [];
+
+    // Проходимся по всем кнопкам =>
+    let answerInputElements = document.getElementsByClassName('answer-main-form');
+    for(let el of answerInputElements) {
+        let answerButtonElement = document.getElementById(el.idAnswer);
+        if(answerButtonElement !== null) {
+            answerButtonElement.lastChild.lastChild.innerText = el.lastChild.lastChild.value;
+        } else {
+            questConstructor.createQuestAnswer(el.lastChild.lastChild.value, questConstructor.dbclickQuestStep);
         }
     }
+    updateCoordY(questConstructor.dbclickQuestStep);
 
-    // Делаем изменения в Data файле =>
-    questConstructor.listQuestStep[index].text = descriptionText;
-    questConstructor.listQuestStep[index].answerButtons = [];
+    questConstructor.clearSelectedQuestStep();
+    document.getElementById('node-popup').remove();
+}
 
-    // Делаем измения в самом Node =>
-    arrayAnswerText.forEach((el) => {
-       questConstructor.createAnswerToQuestStep(index, el);
-    });
+/**
+ * Меняет все координаты Y в определенном Node квеста
+ * @param {number} idQuest - ID Node квеста
+ */
+function updateCoordY(idQuest) {
+    let y = 71;
+    let index = 0;
 
-    let questStep = document.getElementById(`questStep${index}`);
-    questStep.children[1].firstChild.innerText = descriptionText;
-
-    menuNode.remove();
-
-    questConstructor.clearQuestStep();
+    let elementsAnswer = document.querySelectorAll(`#questStep${idQuest} .answerButton`);
+    for(let el of elementsAnswer) {
+        let yd = y + (51 * index);
+        el.setAttribute('y', yd);
+        el.y = yd;
+        el.firstChild.setAttribute('y', yd);
+        el.firstChild.y = yd;
+        el.lastChild.setAttribute('y', yd);
+        el.lastChild.y = yd;
+        index++;
+    }
 }

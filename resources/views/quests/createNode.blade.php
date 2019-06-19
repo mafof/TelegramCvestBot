@@ -24,12 +24,12 @@
         </div>
         <div class="main-constructor">
             <div class="constructor" id="main">
-                <svg id="constructor" width="5000" height="5000" pointer-events="all">
+                <svg id="constructor" width="5000" height="5000" pointer-events="all" xmlns="http://www.w3.org/2000/svg">
                 </svg>
             </div>
             <div class="buttons">
-                <span onclick="showAddNode()" class="btn btn-green btn-quest">Добавить ноду</span>
-                <span onclick="showEditNode()" class="btn btn-green btn-quest">Редактировать ноду</span>
+                <span onclick="showPopupAddNode()" class="btn btn-green btn-quest">Добавить ноду</span>
+                <span onclick="showPopupEditNode()" class="btn btn-green btn-quest">Редактировать ноду</span>
                 <span class="btn btn-green btn-quest">Удалить ноду</span>
                 <span class="btn btn-green btn-quest">Опубликовать</span>
             </div>
@@ -37,9 +37,11 @@
         <script src="{{ asset('js/all.js') }}"></script>
         <script>
             let questConstructor = null;
+            let arrayElementsRemove = []; // Массив с данными привязок которые при обновление удаляются @deprecated
+            let arrayIdAnswerRemove = []; // Массив с ID элементами ответов, которые нужно удалить
             document.addEventListener('DOMContentLoaded', () => {
                 console.log("loaded...");
-                questConstructor = new QuestStep('constructor');
+                questConstructor = new QuestStepConstructor('constructor');
             });
         </script>
     </div>
