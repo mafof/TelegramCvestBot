@@ -31,7 +31,7 @@
             @else
                 <a href="#" class="nav-link user dropdown" id="nickname" onclick="setNickname()">{{ Auth::user()->nickname }}</a>
                 <div class="user-form">
-                    <a href="{{ route('createQuest') }}" class="nav-link dropdown">Создать квест</a>
+                    <a href="{{ route('home') }}" class="nav-link dropdown">Создать квест</a>
                     <a href="{{ route('logout') }}" class="nav-link dropdown"
                        onclick="event.preventDefault();
                                 document.getElementById('logout-form').submit();">

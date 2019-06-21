@@ -11,19 +11,13 @@
 |
 */
 
+Auth::routes(['register' => false]);
+
 Route::get('/', function () {
-    return view('welcome');
-});
-
-Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');
+    return view('quests.createNode', ["title" => "Конструктор квестов"]);
+})->name('home');
 
 Route::get('/about', 'AboutServiceController@index')->name('about');
-
-Route::get('/quest/create/node', function() {
-    return view('quests.createNode', ["title" => "Конструктор квестов"]);
-})->name('createQuest');
 
 
 // Testing routes =>
