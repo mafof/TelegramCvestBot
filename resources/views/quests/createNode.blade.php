@@ -30,7 +30,7 @@
             <div class="buttons">
                 <span onclick="showPopupAddNode()" class="btn btn-green btn-quest">Добавить ноду</span>
                 <span onclick="showPopupEditNode()" class="btn btn-green btn-quest">Редактировать ноду</span>
-                <span class="btn btn-green btn-quest">Удалить ноду</span>
+                <span onclick="removeNodeQuest()" class="btn btn-green btn-quest">Удалить ноду</span>
                 <span class="btn btn-green btn-quest">Опубликовать</span>
             </div>
         </div>
