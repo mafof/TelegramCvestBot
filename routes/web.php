@@ -13,9 +13,9 @@
 
 Auth::routes(['register' => false]);
 
-Route::get('/', function () {
-    return view('quests.createNode', ["title" => "Конструктор квестов"]);
-})->name('home');
+Route::get('/', function() {return view('home'); })->name('home');
+
+Route::resource('/quest', 'QuestStepConstructor')->except(['index', 'show']);
 
 Route::get('/about', 'AboutServiceController@index')->name('about');
 

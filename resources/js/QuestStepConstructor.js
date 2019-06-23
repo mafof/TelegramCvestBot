@@ -16,6 +16,8 @@ class QuestStepConstructor {
         this.clickBind = null; // ID выбранной связи кнопки <-> Node квеста
 
         this.registerGeneralEvents();
+
+        this.importToCanvas(document.getElementById('questsStepsJsonString').value);
     }
 
     /**
@@ -31,6 +33,7 @@ class QuestStepConstructor {
         let questStep = document.createElementNS(this.namespace, 'g');
         questStep.setAttribute('transform', `translate(${x},${y})`);
         questStep.setAttribute('id', `questStep${_id}`);
+        questStep.setAttribute('class', 'questStep');
         // custom properties =>
         questStep.x = x;
         questStep.y = y;
@@ -323,6 +326,9 @@ class QuestStepConstructor {
         return document.querySelectorAll(`#questStep${id} > .answerButton`).length;
     }
 
+    /**
+     * @return {string} - json строка для дальнейшего внедрения в скрытое поле и отправки формы
+     */
     exportToJson() {
         // code...
     }
