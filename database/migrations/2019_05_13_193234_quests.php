@@ -16,13 +16,13 @@ class Quests extends Migration {
             $table->integer('author')->unsigned();
             $table->integer('rating');
             $table->boolean('is_confirm');
-            $table->integer('x');
-            $table->integer('y');
+            $table->integer('quest_steps_id')->unsigned();
             $table->timestamps();
         });
 
         Schema::table('quests', function (Blueprint $table) {
             $table->foreign('author')->references('id')->on('users');
+            $table->foreign('quest_steps_id')->references('id')->on('quest_steps');
         });
     }
 

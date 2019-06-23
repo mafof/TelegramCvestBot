@@ -14,6 +14,8 @@ class QuestSteps extends Migration {
             $table->integer('number');
             $table->string('describe');
             $table->string('describe_image'); // path or url
+            $table->integer('x');
+            $table->integer('y');
         });
     }
 
